@@ -12,7 +12,8 @@ import {
   Typography, 
   Box,
   Paper,
-  TextareaAutosize
+  TextareaAutosize,
+  Link
 } from '@mui/material';
 
 function App() {
@@ -367,15 +368,15 @@ function App() {
   // Definir un objeto con las configuraciones de imágenes
   const FOOD_IMAGES = {
     tortilla: {
-      matches: ['tortilla', 'tortilla de patata', 'tortilla española', 'tortilla de patatas', 'tortilla de patata (platos_preparados)'],
+      matches: ['tortilla de patata', 'tortilla española', 'tortilla de patatas'],
       src: '/tortilla.png'
     },
     hamburguesa: {
-      matches: ['hamburguesa', 'hamburguesa completa', 'burger', 'hamburguesa completa (pan 40g = 2 raciones)'],
+      matches: ['hamburguesa', 'hamburguesa completa', 'burger'],
       src: '/hamburguesa.png'
     },
     pizza: {
-      matches: ['pizza', 'porción pizza', 'porción de pizza'],
+      matches: ['pizza', 'porción pizza', 'porción de pizza', 'porción pizza (100g = 2.5 raciones)'],
       src: '/pizza.png'
     },
     aceitunas: {
@@ -683,7 +684,51 @@ function App() {
         <Typography variant="h4" component="h1" gutterBottom>
           Calculadora de Insulina
         </Typography>
-        
+
+        <Box sx={{ 
+          mb: 4, 
+          display: 'flex', 
+          gap: 3,  // Aumentar el espacio entre enlaces
+          justifyContent: 'center',
+          backgroundColor: '#f5f5f5',  // Añadir un fondo suave
+          padding: '1rem',  // Añadir padding
+          borderRadius: '8px',  // Bordes redondeados
+          marginTop: 2  // Espacio después del título
+        }}>
+          <Link 
+            href="/Alimentacion_en_Diabetes_I.pdf" 
+            target="_blank"
+            sx={{ 
+              textDecoration: 'none',
+              color: 'primary.main',
+              fontWeight: 'medium',  // Hacer el texto más visible
+              padding: '0.5rem 1rem',  // Añadir padding al enlace
+              '&:hover': { 
+                textDecoration: 'underline',
+                backgroundColor: '#e0e0e0'  // Efecto hover
+              }
+            }}
+          >
+            📚 Guía de Alimentación en Diabetes
+          </Link>
+          <Link 
+            href="/Guia-alimentaria.pdf" 
+            target="_blank"
+            sx={{ 
+              textDecoration: 'none',
+              color: 'primary.main',
+              fontWeight: 'medium',
+              padding: '0.5rem 1rem',
+              '&:hover': { 
+                textDecoration: 'underline',
+                backgroundColor: '#e0e0e0'
+              }
+            }}
+          >
+            📖 Guía Alimentaria Completa
+          </Link>
+        </Box>
+
         <Paper sx={{ p: 3, mb: 3 }}>
           <Typography variant="h6" gutterBottom>
             Describe tu comida
@@ -721,7 +766,10 @@ function App() {
             {result.racionesDetalladas.some(item => {
               const itemLower = item.alimento.toLowerCase();
               return Object.values(FOOD_IMAGES).some(food => 
-                food.matches.some(match => itemLower.includes(match.toLowerCase()))
+                food.matches.some(match => 
+                  itemLower.includes(match.toLowerCase()) || 
+                  item.descripcion.toLowerCase().includes(match.toLowerCase())
+                )
               );
             }) && (
               <Box sx={{ mb: 3 }}>
@@ -731,15 +779,10 @@ function App() {
                 {result.racionesDetalladas.map((item, index) => {
                   const itemLower = item.alimento.toLowerCase();
                   const matchedFood = Object.values(FOOD_IMAGES).find(food => {
-                    try {
-                      const fullText = itemLower;
-                      return food.matches.some(match => 
-                        fullText.includes(match.toLowerCase())
-                      );
-                    } catch (error) {
-                      console.error('Error matching food:', error);
-                      return false;
-                    }
+                    return food.matches.some(match => 
+                      itemLower.includes(match.toLowerCase()) || 
+                      item.descripcion.toLowerCase().includes(match.toLowerCase())
+                    );
                   });
 
                   return matchedFood && (
