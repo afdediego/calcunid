@@ -226,7 +226,7 @@ function App() {
       tortilla_patata: {
         raciones: 1,
         descripcion: 'Tortilla de patata (100g = 1 ración)',
-        aliases: ['tortilla', 'tortilla de patata', 'tortilla española'],
+        aliases: ['tortilla', 'tortilla de patata', 'tortilla española', 'tortilla de patatas'],
         imagen: 'tortilla_patata'
       },
       croquetas: {
@@ -359,16 +359,39 @@ function App() {
     const description_lower = description.toLowerCase();
     let racionesDetalladas = [];
     let totalRaciones = 0;
+    let hasPlateWithPotatoes = false;
+
+    // Primero buscar platos preparados que contengan patatas
+    Object.entries(foodDatabase.platos_preparados).forEach(([nombre, data]) => {
+      const found = data.aliases.some(alias => 
+        description_lower.includes(alias)
+      );
+
+      if (found && nombre === 'tortilla_patata') {
+        hasPlateWithPotatoes = true;
+        racionesDetalladas.push({
+          alimento: `${data.descripcion} (platos_preparados)`,
+          raciones: data.raciones,
+          grupo: 'platos_preparados'
+        });
+        totalRaciones += data.raciones;
+      }
+    });
 
     // Función mejorada para buscar coincidencias
     const findMatches = (grupo, alimentos) => {
       Object.entries(alimentos).forEach(([nombre, data]) => {
+        // Si ya encontramos tortilla de patatas, ignorar las patatas individuales
+        if (hasPlateWithPotatoes && 
+            (nombre === 'patata_cocida' || nombre === 'patatas_fritas')) {
+          return;
+        }
+
         const found = data.aliases.some(alias => 
           description_lower.includes(alias)
         );
 
         if (found) {
-          // Incluir también alimentos con 0 raciones para mostrarlos en el desglose
           racionesDetalladas.push({
             alimento: `${data.descripcion} (${grupo})`,
             raciones: data.raciones,
@@ -520,6 +543,10 @@ function App() {
                         height: 'auto',
                         borderRadius: '8px',
                         boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      }}
+                      onError={(e) => {
+                        console.error('Error loading image:', e);
+                        e.target.style.display = 'none';
                       }}
                     />
                   </Box>
