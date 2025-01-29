@@ -52,12 +52,12 @@ function App() {
       patata_cocida: {
         raciones: 4,
         descripcion: 'Plato de patatas (200g = 4 raciones)',
-        aliases: ['patata', 'patatas', 'patata cocida', 'patatas cocidas', 'plato de patatas']
+        aliases: ['patata cocida', 'patatas cocidas', 'plato de patatas', 'patata', 'patatas']
       },
       patatas_fritas: {
         raciones: 2,
         descripcion: 'Patatas fritas (50g = 2 raciones)',
-        aliases: ['patatas fritas', 'patata frita', 'patatas de bolsa']
+        aliases: ['patatas fritas', 'patata frita']
       },
       legumbres: {
         raciones: 2,
@@ -367,6 +367,8 @@ function App() {
 
   // Definir un objeto con las configuraciones de imágenes
   const FOOD_IMAGES = {
+    // Configuración de imágenes para alimentos
+    // Última actualización: 2024
     tortilla: {
       matches: ['tortilla de patata', 'tortilla española', 'tortilla de patatas'],
       src: '/tortilla.png'
@@ -544,11 +546,11 @@ function App() {
       src: '/pastelchocolate.png'
     },
     patatacocida: {
-      matches: ['patata cocida', 'patatas cocidas'],
+      matches: ['patata', 'patatas', 'patata cocida', 'patatas cocidas', 'plato de patatas'],
       src: '/patatacocida.png'
     },
     patatasfritas: {
-      matches: ['patatas fritas', 'patata frita'],
+      matches: ['patatas fritas', 'patata frita', 'fritas'],
       src: '/patatasfritas.png'
     },
     pera: {
@@ -603,52 +605,36 @@ function App() {
     const description_lower = description.toLowerCase();
     let racionesDetalladas = [];
     let totalRaciones = 0;
-    let hasTortilla = false;
 
-    // Primero buscamos si hay tortilla
-    const tortilla = foodDatabase.platos_preparados.tortilla_patata;
-    if (tortilla.aliases.some(alias => description_lower.includes(alias))) {
-        hasTortilla = true;
-        racionesDetalladas.push({
-            alimento: `${tortilla.descripcion} (platos_preparados)`,
-            raciones: tortilla.raciones,
-            grupo: 'platos_preparados'
-        });
-        totalRaciones += tortilla.raciones;
-    }
+    // Primero buscar si hay patatas fritas específicamente
+    const tienePatatasFritas = description_lower.includes('patatas fritas') || 
+                              description_lower.includes('patata frita');
 
-    // Luego buscamos el resto de alimentos, ignorando las patatas si hay tortilla
     Object.entries(foodDatabase).forEach(([grupo, alimentos]) => {
-        // Si hay tortilla, saltamos el grupo de platos_preparados
-        if (hasTortilla && grupo === 'platos_preparados') return;
+      Object.entries(alimentos).forEach(([nombre, data]) => {
+        // Si son patatas cocidas y ya encontramos patatas fritas, saltamos
+        if (nombre === 'patata_cocida' && tienePatatasFritas) {
+          return;
+        }
 
-        Object.entries(alimentos).forEach(([nombre, data]) => {
-            // Si hay tortilla, ignoramos cualquier tipo de patata
-            if (hasTortilla && 
-                (nombre === 'patata_cocida' || 
-                 nombre === 'patatas_fritas' || 
-                 data.aliases.some(alias => alias.includes('patata')))) {
-                return;
-            }
+        const found = data.aliases.some(alias => 
+          description_lower.includes(alias)
+        );
 
-            const found = data.aliases.some(alias => 
-                description_lower.includes(alias)
-            );
-
-            if (found) {
-                racionesDetalladas.push({
-                    alimento: `${data.descripcion} (${grupo})`,
-                    raciones: data.raciones,
-                    grupo: grupo
-                });
-                totalRaciones += data.raciones;
-            }
-        });
+        if (found) {
+          racionesDetalladas.push({
+            alimento: `${data.descripcion} (${grupo})`,
+            raciones: data.raciones,
+            grupo: grupo
+          });
+          totalRaciones += data.raciones;
+        }
+      });
     });
 
     return {
-        total: Math.round(totalRaciones * 10) / 10,
-        desglose: racionesDetalladas
+      total: Math.round(totalRaciones * 10) / 10,
+      desglose: racionesDetalladas
     };
   };
 
