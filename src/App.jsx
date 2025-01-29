@@ -8,7 +8,6 @@ import {
   Paper,
   TextareaAutosize
 } from '@mui/material';
-import tortillaImage from './assets/images/tortilla.jpg';
 
 function App() {
   const [glucoseLevel, setGlucoseLevel] = useState('');
