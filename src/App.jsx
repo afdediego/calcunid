@@ -75,6 +75,11 @@ function App() {
         raciones: 2,
         descripcion: 'Muesli (15g = 2 raciones)',
         aliases: ['muesli']
+      },
+      maiz: {
+        raciones: 2,
+        descripcion: 'Mazorca de maíz (100g = 2 raciones)',
+        aliases: ['maiz', 'mazorca', 'mazorca de maiz', 'choclo']
       }
     },
 
