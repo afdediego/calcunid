@@ -14,52 +14,92 @@ function App() {
   const [mealDescription, setMealDescription] = useState('');
   const [result, setResult] = useState(null);
 
-  // Función para estimar raciones basada en la descripción de la comida
+  // Base de datos de alimentos y sus raciones basada en la documentación
+  const foodDatabase = {
+    // Harinas (1 ración = aprox 20g HC)
+    harinas: {
+      pan: { racionPer: 20, unidad: 'g' }, // 20g = 1 ración
+      arroz: { racionPer: 15, unidad: 'g' },
+      pasta: { racionPer: 15, unidad: 'g' },
+      patatas: { racionPer: 50, unidad: 'g' },
+      cereales: { racionPer: 15, unidad: 'g' },
+      galletas: { racionPer: 15, unidad: 'g' },
+      tarta: { racionPer: 20, unidad: 'porción', raciones: 3 }, // Una porción típica = 3 raciones
+      bizcocho: { racionPer: 20, unidad: 'porción', raciones: 2 },
+      chocolate: { racionPer: 20, unidad: 'porción', raciones: 2 },
+    },
+    
+    // Lácteos (1 ración = aprox 12g HC)
+    lacteos: {
+      leche: { racionPer: 200, unidad: 'ml' },
+      yogur: { racionPer: 2, unidad: 'unidades' },
+    },
+    
+    // Frutas (1 ración = aprox 10g HC)
+    frutas: {
+      manzana: { racionPer: 100, unidad: 'g' },
+      pera: { racionPer: 100, unidad: 'g' },
+      platano: { racionPer: 50, unidad: 'g' },
+      naranja: { racionPer: 100, unidad: 'g' },
+      mandarina: { racionPer: 100, unidad: 'g' },
+      uva: { racionPer: 50, unidad: 'g' },
+      sandia: { racionPer: 150, unidad: 'g' },
+      melon: { racionPer: 150, unidad: 'g' },
+    },
+    
+    // Verduras (bajas en HC)
+    verduras: {
+      lechuga: { racionPer: 300, unidad: 'g', raciones: 0.2 },
+      tomate: { racionPer: 300, unidad: 'g', raciones: 0.3 },
+      zanahoria: { racionPer: 150, unidad: 'g', raciones: 0.5 },
+      judias: { racionPer: 150, unidad: 'g', raciones: 1 },
+      guisantes: { racionPer: 60, unidad: 'g', raciones: 1 },
+    }
+  };
+
+  // Función mejorada para estimar raciones
   const estimateRations = (description) => {
     const description_lower = description.toLowerCase();
-    let raciones = 0;
+    let totalRaciones = 0;
 
-    // Análisis básico de la descripción
-    // Harinas/Carbohidratos
-    if (description_lower.includes('arroz')) raciones += 2;
-    if (description_lower.includes('pasta')) raciones += 2;
-    if (description_lower.includes('pan')) raciones += 1;
-    if (description_lower.includes('patata')) raciones += 1;
-    if (description_lower.includes('maiz') || description_lower.includes('mazorca')) raciones += 1.5;
-    
-    // Verduras (tienen menos impacto en las raciones)
-    if (description_lower.includes('lechuga')) raciones += 0.2;
-    if (description_lower.includes('tomate')) raciones += 0.3;
-    if (description_lower.includes('cebolla')) raciones += 0.2;
-    
-    // Frutas
-    if (description_lower.includes('manzana')) raciones += 1;
-    if (description_lower.includes('plátano')) raciones += 1;
-    if (description_lower.includes('naranja')) raciones += 1;
+    // Función auxiliar para buscar coincidencias
+    const findFoodMatches = (foodGroup) => {
+      Object.entries(foodGroup).forEach(([food, data]) => {
+        if (description_lower.includes(food)) {
+          // Si el alimento tiene raciones predefinidas, usar ese valor
+          if (data.raciones) {
+            totalRaciones += data.raciones;
+          } else {
+            // Por defecto, asumimos una ración estándar
+            totalRaciones += 1;
+          }
+        }
+      });
+    };
 
-    // Lácteos
-    if (description_lower.includes('leche')) raciones += 1;
-    if (description_lower.includes('yogur')) raciones += 1;
+    // Buscar en cada grupo de alimentos
+    Object.values(foodDatabase).forEach(foodGroup => {
+      findFoodMatches(foodGroup);
+    });
 
-    return Math.round(raciones * 10) / 10;
+    // Ajustes especiales para combinaciones comunes
+    if (description_lower.includes('tarta') && description_lower.includes('chocolate')) {
+      totalRaciones = 4; // Una porción de tarta de chocolate suele ser más alta en HC
+    }
+
+    return Math.round(totalRaciones * 10) / 10;
   };
 
   const calculateInsulin = () => {
-    // Convertir nivel de glucosa a número
     const currentGlucose = parseFloat(glucoseLevel);
+    const targetGlucose = 100;
     
-    // Objetivo de glucosa
-    const targetGlucose = 100; // Basado en el ejemplo proporcionado
-    
-    // Cálculo de corrección de glucosa
     const correctionNeeded = Math.max(currentGlucose - targetGlucose, 0);
     const correctionUnits = Math.round((correctionNeeded / 40) * 10) / 10;
     
-    // Cálculo de raciones basado en la descripción de la comida
     const estimatedRations = estimateRations(mealDescription);
     const carbUnits = estimatedRations; // 1:1 ratio
     
-    // Total de unidades
     const totalUnits = correctionUnits + carbUnits;
 
     setResult({
