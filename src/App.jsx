@@ -242,7 +242,8 @@ function App() {
       hamburguesa: {
         raciones: 2,
         descripcion: 'Hamburguesa completa (pan 40g = 2 raciones)',
-        aliases: ['hamburguesa', 'burger']
+        aliases: ['hamburguesa', 'burger'],
+        imagen: 'hamburguesa'
       }
     },
 
@@ -356,39 +357,31 @@ function App() {
     let racionesDetalladas = [];
     let totalRaciones = 0;
 
-    // Primero buscamos si hay tortilla
-    const hasTortilla = foodDatabase.platos_preparados.tortilla_patata.aliases.some(
-        alias => description_lower.includes(alias)
-    );
+    // Buscar todos los alimentos
+    Object.entries(foodDatabase).forEach(([grupo, alimentos]) => {
+        Object.entries(alimentos).forEach(([nombre, data]) => {
+            const found = data.aliases.some(alias => 
+                description_lower.includes(alias)
+            );
 
-    // Si hay tortilla, solo añadimos la tortilla
-    if (hasTortilla) {
-        const tortilla = foodDatabase.platos_preparados.tortilla_patata;
-        racionesDetalladas.push({
-            alimento: `${tortilla.descripcion} (platos_preparados)`,
-            raciones: tortilla.raciones,
-            grupo: 'platos_preparados'
-        });
-        totalRaciones += tortilla.raciones;
-    } else {
-        // Si no hay tortilla, buscamos todos los alimentos normalmente
-        Object.entries(foodDatabase).forEach(([grupo, alimentos]) => {
-            Object.entries(alimentos).forEach(([nombre, data]) => {
-                const found = data.aliases.some(alias => 
-                    description_lower.includes(alias)
-                );
-
-                if (found) {
-                    racionesDetalladas.push({
-                        alimento: `${data.descripcion} (${grupo})`,
-                        raciones: data.raciones,
-                        grupo: grupo
-                    });
-                    totalRaciones += data.raciones;
+            if (found) {
+                // Si es tortilla, ignorar las patatas
+                if (nombre === 'tortilla_patata') {
+                    // Evitar añadir patatas si hay tortilla
+                    racionesDetalladas = racionesDetalladas.filter(item => 
+                        !item.alimento.toLowerCase().includes('patata')
+                    );
                 }
-            });
+
+                racionesDetalladas.push({
+                    alimento: `${data.descripcion} (${grupo})`,
+                    raciones: data.raciones,
+                    grupo: grupo
+                });
+                totalRaciones += data.raciones;
+            }
         });
-    }
+    });
 
     return {
         total: Math.round(totalRaciones * 10) / 10,
@@ -463,31 +456,49 @@ function App() {
 
         {result && (
           <Paper sx={{ p: 3 }}>
-            {result.racionesDetalladas.some(item => 
-              item.alimento.toLowerCase().includes('tortilla de patata') ||
-              item.alimento.toLowerCase().includes('tortilla española')
-            ) && (
+            {result.racionesDetalladas.some(item => {
+              const itemLower = item.alimento.toLowerCase();
+              return (
+                itemLower.includes('tortilla de patata') ||
+                itemLower.includes('tortilla española') ||
+                itemLower.includes('hamburguesa completa')
+              );
+            }) && (
               <Box sx={{ mb: 3 }}>
                 <Typography variant="subtitle2" gutterBottom>
                   Referencia visual de porciones:
                 </Typography>
-                <img 
-                  src="/tortilla.jpg"
-                  alt="Porciones de tortilla de patata"
-                  style={{
-                    width: '100%',
-                    maxWidth: '500px',
-                    height: 'auto',
-                    borderRadius: '8px',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                    display: 'block',
-                    margin: '0 auto'
-                  }}
-                  onError={(e) => {
-                    console.error('Error cargando imagen:', e);
-                    e.target.style.display = 'none';  // Ocultar la imagen si hay error
-                  }}
-                />
+                {result.racionesDetalladas.map((item, index) => {
+                  const itemLower = item.alimento.toLowerCase();
+                  let imageSrc = null;
+                  
+                  if (itemLower.includes('tortilla')) {
+                    imageSrc = '/tortilla.jpg';
+                  } else if (itemLower.includes('hamburguesa')) {
+                    imageSrc = '/hamburguesa.jpg';
+                  }
+
+                  return imageSrc && (
+                    <img 
+                      key={index}
+                      src={imageSrc}
+                      alt={`Porciones de ${item.alimento}`}
+                      style={{
+                        width: '100%',
+                        maxWidth: '500px',
+                        height: 'auto',
+                        borderRadius: '8px',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                        display: 'block',
+                        margin: '1rem auto'
+                      }}
+                      onError={(e) => {
+                        console.error('Error cargando imagen:', e);
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  );
+                })}
               </Box>
             )}
 
