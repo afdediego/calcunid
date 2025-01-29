@@ -375,7 +375,7 @@ function App() {
       src: '/hamburguesa.png'
     },
     pizza: {
-      matches: ['pizza', 'porción pizza', 'porción de pizza', 'porción pizza (100g = 2.5 raciones)'],
+      matches: ['pizza', 'porción pizza', 'porción de pizza'],
       src: '/pizza.png'
     },
     aceitunas: {
@@ -731,8 +731,8 @@ function App() {
                 {result.racionesDetalladas.map((item, index) => {
                   const itemLower = item.alimento.toLowerCase();
                   const matchedFood = Object.values(FOOD_IMAGES).find(food => {
-                    const fullText = `${itemLower} ${item.descripcion.toLowerCase()} ${item.grupo.toLowerCase()}`;
                     try {
+                      const fullText = itemLower;
                       return food.matches.some(match => 
                         fullText.includes(match.toLowerCase())
                       );
