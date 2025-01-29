@@ -512,36 +512,39 @@ function App() {
 
             <Box sx={{ mt: 3 }}>
               {result.racionesDetalladas.map((item, index) => {
-                const foodKey = Object.keys(foodDatabase[item.grupo]).find(key => 
-                  foodDatabase[item.grupo][key].descripcion === item.alimento.split(' (')[0]
+                // Encontrar el alimento en la base de datos
+                const alimento = Object.values(foodDatabase[item.grupo]).find(
+                  food => food.descripcion === item.alimento.split(' (')[0]
                 );
-                const foodImage = foodKey && foodDatabase[item.grupo][foodKey].imagen;
                 
-                console.log('Food key:', foodKey);
-                console.log('Food image:', foodImage);
-                console.log('Image URL:', foodImages[foodImage]);
-                
-                return foodImage && (
-                  <Box key={index} sx={{ mt: 2 }}>
-                    <Typography variant="subtitle2" gutterBottom>
-                      Referencia visual de porciones:
-                    </Typography>
-                    <img 
-                      src={foodImages[foodImage]} 
-                      alt={`Porciones de ${item.alimento}`}
-                      style={{
-                        maxWidth: '100%',
-                        height: 'auto',
-                        borderRadius: '8px',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                      }}
-                      onError={(e) => {
-                        console.error('Error loading image:', foodImages[foodImage]);
-                        e.target.style.display = 'none';
-                      }}
-                    />
-                  </Box>
-                );
+                // Si el alimento tiene imagen, mostrarla
+                if (alimento && alimento.imagen) {
+                  console.log('Mostrando imagen para:', alimento.descripcion);
+                  console.log('URL de la imagen:', foodImages[alimento.imagen]);
+                  
+                  return (
+                    <Box key={index} sx={{ mt: 2 }}>
+                      <Typography variant="subtitle2" gutterBottom>
+                        Referencia visual de porciones:
+                      </Typography>
+                      <img 
+                        src={foodImages[alimento.imagen]} 
+                        alt={`Porciones de ${item.alimento}`}
+                        style={{
+                          maxWidth: '100%',
+                          height: 'auto',
+                          borderRadius: '8px',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                        }}
+                        onError={(e) => {
+                          console.error('Error cargando imagen:', foodImages[alimento.imagen]);
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    </Box>
+                  );
+                }
+                return null;
               })}
             </Box>
 
