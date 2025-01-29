@@ -63,8 +63,9 @@ function App() {
         raciones: 2,
         descripcion: 'Legumbres cocidas (60g = 2 raciones)',
         aliases: [
-          'garbanzos', 'lentejas', 'alubias', 'judías', 
-          'garbanzos hervidos', 'lentejas hervidas', 'alubias hervidas'
+          'garbanzos', 'lentejas', 'alubias', 'judías', 'judías verdes',
+          'garbanzos hervidos', 'lentejas hervidas', 'alubias hervidas',
+          'judías verdes hervidas'
         ]
       },
       cereales_desayuno: {
@@ -362,6 +363,14 @@ function App() {
         descripcion: 'Carne (sin hidratos)',
         aliases: ['carne', 'ternera', 'cerdo', 'lomo', 'filete']
       }
+    },
+
+    bebidas: {
+      vino: {
+        raciones: 0.5,
+        descripcion: 'Copa de vino (100ml)',
+        aliases: ['vino', 'vino tinto', 'vino blanco', 'copa de vino']
+      },
     }
   };
 
@@ -390,7 +399,7 @@ function App() {
       src: '/alcachofas.png'
     },
     alubias: {
-      matches: ['alubias', 'alubia', 'judías', 'judía'],
+      matches: ['alubias', 'alubia', 'alubias cocidas', 'alubias hervidas', 'legumbres cocidas'],
       src: '/alubias.png'
     },
     arroz: {
@@ -434,7 +443,7 @@ function App() {
       src: '/ensaladamixta.png'
     },
     espaguetis: {
-      matches: ['espaguetis', 'pasta', 'macarrones'],
+      matches: ['espaguetis', 'pasta'],
       src: '/espaguetis.png'
     },
     flan: {
@@ -458,7 +467,7 @@ function App() {
       src: '/galletasmaria.png'
     },
     garbanzos: {
-      matches: ['garbanzos', 'garbanzo'],
+      matches: ['garbanzos cocidos', 'garbanzos', 'garbanzo', 'legumbres cocidas'],
       src: '/garbanzos.png'
     },
     guisantes: {
@@ -474,7 +483,7 @@ function App() {
       src: '/higos.png'
     },
     judiaverde: {
-      matches: ['judia verde', 'judía verde', 'judias verdes'],
+      matches: ['judia verde', 'judía verde', 'judias verdes', 'judías verdes', 'judía verde (150g = 0.5 raciones)'],
       src: '/judiaverde.png'
     },
     kiwi: {
@@ -486,11 +495,11 @@ function App() {
       src: '/leche.png'
     },
     lentejas: {
-      matches: ['lentejas', 'lenteja'],
+      matches: ['lentejas cocidas', 'lentejas', 'lenteja', 'legumbres cocidas'],
       src: '/lentejas.png'
     },
     macarrones: {
-      matches: ['macarrones', 'pasta'],
+      matches: ['macarrones'],
       src: '/macarrones.png'
     },
     macedonia: {
@@ -598,6 +607,10 @@ function App() {
     paella: {
       matches: ['paella', 'arroz con cosas'],
       src: '/paella.png'
+    },
+    vino: {
+      matches: ['vino', 'vino tinto', 'vino blanco', 'copa de vino'],
+      src: '/vino.png'
     }
   };
 
@@ -606,12 +619,21 @@ function App() {
     let racionesDetalladas = [];
     let totalRaciones = 0;
 
+    // Primero buscar si hay tortilla
+    const tieneTortilla = description_lower.includes('tortilla de patata') || 
+                         description_lower.includes('tortilla española') ||
+                         description_lower.includes('tortilla de patatas');
+
     // Primero buscar si hay patatas fritas
     const tienePatatasFritas = description_lower.includes('patatas fritas') || 
                               description_lower.includes('patata frita');
 
     Object.entries(foodDatabase).forEach(([grupo, alimentos]) => {
       Object.entries(alimentos).forEach(([nombre, data]) => {
+        // Si hay tortilla y es patata cocida, saltamos
+        if ((nombre === 'patata_cocida' || nombre === 'patatas_fritas') && tieneTortilla) {
+          return;
+        }
         // Si son patatas cocidas y ya encontramos patatas fritas, saltamos
         if (nombre === 'patata_cocida' && tienePatatasFritas) {
           return;
@@ -756,11 +778,17 @@ function App() {
               {result.racionesDetalladas.map((item, index) => {
                 const itemLower = item.alimento.toLowerCase();
                 const matchedFood = Object.values(FOOD_IMAGES).find(food => {
-                  // Primero verificar si es patatas fritas
+                  // Primero verificar si es tortilla
+                  if (itemLower.includes('tortilla de patata') || 
+                      itemLower.includes('tortilla española') ||
+                      itemLower.includes('tortilla de patatas')) {
+                    return food.matches.includes('tortilla de patata');
+                  }
+                  // Luego verificar si es patatas fritas
                   if (itemLower.includes('patatas fritas') || itemLower.includes('patata frita')) {
                     return food.matches.includes('patatas fritas');
                   }
-                  // Si no es patatas fritas, buscar otras coincidencias
+                  // Si no es ninguno de los casos especiales, buscar otras coincidencias
                   return food.matches.some(match => 
                     itemLower.includes(match.toLowerCase())
                   );
