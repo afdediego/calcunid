@@ -352,51 +352,56 @@ function App() {
   };
 
   const foodImages = {
-    tortilla_patata: '/images/tortilla.png'
+    tortilla_patata: 'https://raw.githubusercontent.com/afdediego/calcunid/main/public/images/tortilla.png'
   };
 
   const estimateRations = (description) => {
     const description_lower = description.toLowerCase();
     let racionesDetalladas = [];
     let totalRaciones = 0;
-    let hasPlateWithPotatoes = false;
+    let tortillaFound = false;
 
-    // Función auxiliar para buscar coincidencias
-    const addFoodIfFound = (data, nombre, grupo) => {
-      const found = data.aliases.some(alias => 
-        description_lower.includes(alias)
-      );
-
-      if (found) {
-        if (nombre === 'tortilla_patata') {
-          hasPlateWithPotatoes = true;
-        }
-        
-        // Si ya encontramos tortilla, ignorar las patatas
-        if (hasPlateWithPotatoes && 
-            (nombre === 'patata_cocida' || nombre === 'patatas_fritas')) {
-          return;
-        }
-
+    // Primero buscamos la tortilla de patata
+    const tortilla = foodDatabase.platos_preparados.tortilla_patata;
+    if (tortilla.aliases.some(alias => description_lower.includes(alias))) {
+        tortillaFound = true;
         racionesDetalladas.push({
-          alimento: `${data.descripcion} (${grupo})`,
-          raciones: data.raciones,
-          grupo: grupo
+            alimento: `${tortilla.descripcion} (platos_preparados)`,
+            raciones: tortilla.raciones,
+            grupo: 'platos_preparados'
         });
-        totalRaciones += data.raciones;
-      }
-    };
+        totalRaciones += tortilla.raciones;
+    }
 
-    // Buscar en todos los grupos de alimentos
+    // Luego buscamos el resto de alimentos
     Object.entries(foodDatabase).forEach(([grupo, alimentos]) => {
-      Object.entries(alimentos).forEach(([nombre, data]) => {
-        addFoodIfFound(data, nombre, grupo);
-      });
+        Object.entries(alimentos).forEach(([nombre, data]) => {
+            // Si encontramos tortilla, saltamos las patatas y la propia tortilla
+            if (tortillaFound && 
+                (nombre === 'patata_cocida' || 
+                 nombre === 'patatas_fritas' || 
+                 nombre === 'tortilla_patata')) {
+                return;
+            }
+
+            const found = data.aliases.some(alias => 
+                description_lower.includes(alias)
+            );
+
+            if (found) {
+                racionesDetalladas.push({
+                    alimento: `${data.descripcion} (${grupo})`,
+                    raciones: data.raciones,
+                    grupo: grupo
+                });
+                totalRaciones += data.raciones;
+            }
+        });
     });
 
     return {
-      total: Math.round(totalRaciones * 10) / 10,
-      desglose: racionesDetalladas
+        total: Math.round(totalRaciones * 10) / 10,
+        desglose: racionesDetalladas
     };
   };
 
