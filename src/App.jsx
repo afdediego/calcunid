@@ -361,8 +361,8 @@ function App() {
     let totalRaciones = 0;
     let hasPlateWithPotatoes = false;
 
-    // Primero buscar platos preparados que contengan patatas
-    Object.entries(foodDatabase.platos_preparados).forEach(([nombre, data]) => {
+    // Función auxiliar para buscar coincidencias
+    const addFoodIfFound = (data, nombre, grupo) => {
       const found = data.aliases.some(alias => 
         description_lower.includes(alias)
       );
@@ -371,39 +371,27 @@ function App() {
         if (nombre === 'tortilla_patata') {
           hasPlateWithPotatoes = true;
         }
+        
+        // Si ya encontramos tortilla, ignorar las patatas
+        if (hasPlateWithPotatoes && 
+            (nombre === 'patata_cocida' || nombre === 'patatas_fritas')) {
+          return;
+        }
+
         racionesDetalladas.push({
-          alimento: `${data.descripcion} (platos_preparados)`,
+          alimento: `${data.descripcion} (${grupo})`,
           raciones: data.raciones,
-          grupo: 'platos_preparados'
+          grupo: grupo
         });
         totalRaciones += data.raciones;
       }
-    });
+    };
 
-    // Buscar en el resto de grupos de alimentos
+    // Buscar en todos los grupos de alimentos
     Object.entries(foodDatabase).forEach(([grupo, alimentos]) => {
-      if (grupo !== 'platos_preparados') {  // Evitamos buscar de nuevo en platos_preparados
-        Object.entries(alimentos).forEach(([nombre, data]) => {
-          // Si ya encontramos tortilla de patatas, ignorar las patatas individuales
-          if (hasPlateWithPotatoes && 
-              (nombre === 'patata_cocida' || nombre === 'patatas_fritas')) {
-            return;
-          }
-
-          const found = data.aliases.some(alias => 
-            description_lower.includes(alias)
-          );
-
-          if (found) {
-            racionesDetalladas.push({
-              alimento: `${data.descripcion} (${grupo})`,
-              raciones: data.raciones,
-              grupo: grupo
-            });
-            totalRaciones += data.raciones;
-          }
-        });
-      }
+      Object.entries(alimentos).forEach(([nombre, data]) => {
+        addFoodIfFound(data, nombre, grupo);
+      });
     });
 
     return {
