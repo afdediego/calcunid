@@ -763,51 +763,40 @@ function App() {
 
         {result && (
           <Paper sx={{ p: 3 }}>
-            {result.racionesDetalladas.some(item => {
-              const itemLower = item.alimento.toLowerCase();
-              return Object.values(FOOD_IMAGES).some(food => 
-                food.matches.some(match => 
-                  itemLower.includes(match.toLowerCase()) || 
-                  item.descripcion.toLowerCase().includes(match.toLowerCase())
-                )
-              );
-            }) && (
-              <Box sx={{ mb: 3 }}>
-                <Typography variant="subtitle2" gutterBottom>
-                  Referencia visual de porciones:
-                </Typography>
-                {result.racionesDetalladas.map((item, index) => {
-                  const itemLower = item.alimento.toLowerCase();
-                  const matchedFood = Object.values(FOOD_IMAGES).find(food => {
-                    return food.matches.some(match => 
-                      itemLower.includes(match.toLowerCase()) || 
-                      item.descripcion.toLowerCase().includes(match.toLowerCase())
-                    );
-                  });
-
-                  return matchedFood && (
-                    <img 
-                      key={index}
-                      src={matchedFood.src}
-                      alt={`Porciones de ${item.alimento}`}
-                      style={{
-                        width: '100%',
-                        maxWidth: '500px',
-                        height: 'auto',
-                        borderRadius: '8px',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                        display: 'block',
-                        margin: '1rem auto'
-                      }}
-                      onError={(e) => {
-                        console.error('Error cargando imagen:', e);
-                        e.target.style.display = 'none';
-                      }}
-                    />
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" gutterBottom>
+                Referencia visual de porciones:
+              </Typography>
+              {result.racionesDetalladas.map((item, index) => {
+                const itemLower = item.alimento.toLowerCase();
+                const matchedFood = Object.values(FOOD_IMAGES).find(food => {
+                  return food.matches.some(match => 
+                    itemLower.includes(match.toLowerCase())
                   );
-                })}
-              </Box>
-            )}
+                });
+
+                return matchedFood && (
+                  <img 
+                    key={index}
+                    src={matchedFood.src}
+                    alt={`Porciones de ${item.alimento}`}
+                    style={{
+                      width: '100%',
+                      maxWidth: '500px',
+                      height: 'auto',
+                      borderRadius: '8px',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                      display: 'block',
+                      margin: '1rem auto'
+                    }}
+                    onError={(e) => {
+                      console.error('Error cargando imagen:', e);
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                );
+              })}
+            </Box>
 
             <Typography variant="h6" gutterBottom>
               Desglose detallado del cálculo:
