@@ -582,9 +582,9 @@ function App() {
       matches: ['sandia', 'sandía'],
       src: '/sandia.png'
     },
-    snack: {
-      matches: ['snack', 'aperitivo'],
-      src: '/snack.png'
+    snacks: {
+      matches: ['snacks', 'snack', 'aperitivo', 'aperitivos', 'patatas de bolsa'],
+      src: '/snacks.png'
     },
     tarta: {
       matches: ['tarta'],
