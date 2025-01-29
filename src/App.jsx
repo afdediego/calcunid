@@ -352,7 +352,7 @@ function App() {
   };
 
   const foodImages = {
-    tortilla_patata: '/tortilla.png'
+    tortilla_patata: '/images/tortilla.png'
   };
 
   const estimateRations = (description) => {
@@ -360,6 +360,7 @@ function App() {
     let racionesDetalladas = [];
     let totalRaciones = 0;
     let hasPlateWithPotatoes = false;
+    let tortillaFound = false;  // Nueva variable para controlar si ya encontramos tortilla
 
     // Primero buscar platos preparados que contengan patatas
     Object.entries(foodDatabase.platos_preparados).forEach(([nombre, data]) => {
@@ -367,7 +368,8 @@ function App() {
         description_lower.includes(alias)
       );
 
-      if (found && nombre === 'tortilla_patata') {
+      if (found && nombre === 'tortilla_patata' && !tortillaFound) {
+        tortillaFound = true;  // Marcamos que ya encontramos una tortilla
         hasPlateWithPotatoes = true;
         racionesDetalladas.push({
           alimento: `${data.descripcion} (platos_preparados)`,
@@ -378,32 +380,9 @@ function App() {
       }
     });
 
-    // Función mejorada para buscar coincidencias
-    const findMatches = (grupo, alimentos) => {
-      Object.entries(alimentos).forEach(([nombre, data]) => {
-        // Si ya encontramos tortilla de patatas, ignorar las patatas individuales
-        if (hasPlateWithPotatoes && 
-            (nombre === 'patata_cocida' || nombre === 'patatas_fritas')) {
-          return;
-        }
-
-        const found = data.aliases.some(alias => 
-          description_lower.includes(alias)
-        );
-
-        if (found) {
-          racionesDetalladas.push({
-            alimento: `${data.descripcion} (${grupo})`,
-            raciones: data.raciones,
-            grupo: grupo
-          });
-          totalRaciones += data.raciones;
-        }
-      });
-    };
-
-    // Buscar en cada grupo de alimentos
+    // No necesitamos buscar más en platos_preparados si ya encontramos la tortilla
     Object.entries(foodDatabase).forEach(([grupo, alimentos]) => {
+      if (grupo === 'platos_preparados' && tortillaFound) return;
       findMatches(grupo, alimentos);
     });
 
@@ -530,6 +509,10 @@ function App() {
                 );
                 const foodImage = foodKey && foodDatabase[item.grupo][foodKey].imagen;
                 
+                console.log('Food key:', foodKey);
+                console.log('Food image:', foodImage);
+                console.log('Image URL:', foodImages[foodImage]);
+                
                 return foodImage && (
                   <Box key={index} sx={{ mt: 2 }}>
                     <Typography variant="subtitle2" gutterBottom>
@@ -546,11 +529,8 @@ function App() {
                       }}
                       onError={(e) => {
                         console.error('Error loading image:', foodImages[foodImage]);
-                        e.target.insertAdjacentHTML('afterend', 
-                          `<div style="color: red;">Error cargando imagen: ${foodImages[foodImage]}</div>`
-                        );
+                        e.target.style.display = 'none';
                       }}
-                      onLoad={() => console.log('Imagen cargada correctamente')}
                     />
                   </Box>
                 );
