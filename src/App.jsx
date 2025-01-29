@@ -351,10 +351,6 @@ function App() {
     }
   };
 
-  const foodImages = {
-    tortilla_patata: '/tortilla.png'
-  };
-
   const estimateRations = (description) => {
     const description_lower = description.toLowerCase();
     let racionesDetalladas = [];
@@ -467,6 +463,34 @@ function App() {
 
         {result && (
           <Paper sx={{ p: 3 }}>
+            {result.racionesDetalladas.some(item => 
+              item.alimento.toLowerCase().includes('tortilla de patata') ||
+              item.alimento.toLowerCase().includes('tortilla española')
+            ) && (
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="subtitle2" gutterBottom>
+                  Referencia visual de porciones:
+                </Typography>
+                <img 
+                  src="/tortilla.jpg"
+                  alt="Porciones de tortilla de patata"
+                  style={{
+                    width: '100%',
+                    maxWidth: '500px',
+                    height: 'auto',
+                    borderRadius: '8px',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                    display: 'block',
+                    margin: '0 auto'
+                  }}
+                  onError={(e) => {
+                    console.error('Error cargando imagen:', e);
+                    e.target.style.display = 'none';  // Ocultar la imagen si hay error
+                  }}
+                />
+              </Box>
+            )}
+
             <Typography variant="h6" gutterBottom>
               Desglose detallado del cálculo:
             </Typography>
@@ -509,44 +533,6 @@ function App() {
             <Typography variant="h6" sx={{ color: 'primary.main', mt: 2 }}>
               Dosis total recomendada: {result.totalUnits} unidades de insulina
             </Typography>
-
-            <Box sx={{ mt: 3 }}>
-              {result.racionesDetalladas.map((item, index) => {
-                // Encontrar el alimento en la base de datos
-                const alimento = Object.values(foodDatabase[item.grupo]).find(
-                  food => food.descripcion === item.alimento.split(' (')[0]
-                );
-                
-                // Si el alimento tiene imagen, mostrarla
-                if (alimento && alimento.imagen) {
-                  console.log('Mostrando imagen para:', alimento.descripcion);
-                  console.log('URL de la imagen:', foodImages[alimento.imagen]);
-                  
-                  return (
-                    <Box key={index} sx={{ mt: 2 }}>
-                      <Typography variant="subtitle2" gutterBottom>
-                        Referencia visual de porciones:
-                      </Typography>
-                      <img 
-                        src={foodImages[alimento.imagen]} 
-                        alt={`Porciones de ${item.alimento}`}
-                        style={{
-                          maxWidth: '100%',
-                          height: 'auto',
-                          borderRadius: '8px',
-                          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                        }}
-                        onError={(e) => {
-                          console.error('Error cargando imagen:', foodImages[alimento.imagen]);
-                          e.target.style.display = 'none';
-                        }}
-                      />
-                    </Box>
-                  );
-                }
-                return null;
-              })}
-            </Box>
 
             <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}>
               ⚠️ Estos cálculos son aproximados. Consulta siempre con tu médico para ajustar las dosis.
