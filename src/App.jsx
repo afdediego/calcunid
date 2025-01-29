@@ -352,7 +352,7 @@ function App() {
   };
 
   const foodImages = {
-    tortilla_patata: '/images/tortilla.png'
+    tortilla_patata: '/tortilla.png'
   };
 
   const estimateRations = (description) => {
@@ -545,9 +545,12 @@ function App() {
                         boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
                       }}
                       onError={(e) => {
-                        console.error('Error loading image:', e);
-                        e.target.style.display = 'none';
+                        console.error('Error loading image:', foodImages[foodImage]);
+                        e.target.insertAdjacentHTML('afterend', 
+                          `<div style="color: red;">Error cargando imagen: ${foodImages[foodImage]}</div>`
+                        );
                       }}
+                      onLoad={() => console.log('Imagen cargada correctamente')}
                     />
                   </Box>
                 );
