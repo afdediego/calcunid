@@ -399,7 +399,7 @@ function App() {
       src: '/biscote.png'
     },
     calamares: {
-      matches: ['calamares', 'calamar'],
+      matches: ['calamares', 'calamar', 'calamares fritos', 'calamares a la romana'],
       src: '/calamares.png'
     },
     cereales: {
@@ -621,6 +621,10 @@ function App() {
     yogurdesnatado: {
       matches: ['yogur desnatado', 'yogur sin azúcar', 'yogur natural'],
       src: '/yogurdesnatado.png'
+    },
+    paella: {
+      matches: ['paella', 'arroz con cosas'],
+      src: '/paella.png'
     }
   };
 
