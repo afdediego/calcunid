@@ -368,15 +368,31 @@ function App() {
   const FOOD_IMAGES = {
     tortilla: {
       matches: ['tortilla de patata', 'tortilla española'],
-      src: '/tortilla.jpg'
+      src: '/tortilla.png'
     },
     hamburguesa: {
       matches: ['hamburguesa completa', 'hamburguesa', 'burger'],
-      src: '/hamburguesa.jpg'
+      src: '/hamburguesa.png'
     },
     pizza: {
       matches: ['pizza'],
-      src: '/pizza.jpg'
+      src: '/pizza.png'
+    },
+    aceitunas: {
+      matches: ['aceitunas', 'aceituna'],
+      src: '/aceitunas.png'
+    },
+    alcachofas: {
+      matches: ['alcachofas', 'alcachofa'],
+      src: '/alcachofas.png'
+    },
+    alubias: {
+      matches: ['alubias', 'alubia', 'judías', 'judía'],
+      src: '/alubias.png'
+    },
+    arroz: {
+      matches: ['arroz', 'arroz hervido'],
+      src: '/arroz.png'
     }
   };
 
@@ -503,7 +519,7 @@ function App() {
             {result.racionesDetalladas.some(item => {
               const itemLower = item.alimento.toLowerCase();
               return Object.values(FOOD_IMAGES).some(food => 
-                food.matches.some(match => itemLower.includes(match))
+                food.matches.some(match => itemLower.includes(match.toLowerCase()))
               );
             }) && (
               <Box sx={{ mb: 3 }}>
@@ -513,7 +529,7 @@ function App() {
                 {result.racionesDetalladas.map((item, index) => {
                   const itemLower = item.alimento.toLowerCase();
                   const matchedFood = Object.values(FOOD_IMAGES).find(food => 
-                    food.matches.some(match => itemLower.includes(match))
+                    food.matches.some(match => itemLower.includes(match.toLowerCase()))
                   );
 
                   return matchedFood && (
