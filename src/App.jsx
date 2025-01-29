@@ -248,7 +248,7 @@ function App() {
       pizza: {
         raciones: 2.5,
         descripcion: 'Porción pizza (100g = 2.5 raciones)',
-        aliases: ['pizza'],
+        aliases: ['pizza', 'porción pizza', 'porción de pizza'],
         imagen: 'pizza'
       },
       hamburguesa: {
@@ -367,7 +367,7 @@ function App() {
   // Definir un objeto con las configuraciones de imágenes
   const FOOD_IMAGES = {
     tortilla: {
-      matches: ['tortilla de patata', 'tortilla española'],
+      matches: ['tortilla', 'tortilla de patata', 'tortilla española', 'tortilla de patatas', 'tortilla de patata (platos_preparados)'],
       src: '/tortilla.png'
     },
     hamburguesa: {
@@ -375,7 +375,7 @@ function App() {
       src: '/hamburguesa.png'
     },
     pizza: {
-      matches: ['pizza'],
+      matches: ['pizza', 'porción pizza', 'porción de pizza', 'pizza (platos_preparados)'],
       src: '/pizza.png'
     },
     aceitunas: {
@@ -558,24 +558,34 @@ function App() {
       matches: ['piña', 'piña en su jugo'],
       src: '/piña.png'
     },
-    pizza: {
-      matches: ['pizza'],
-      src: '/pizza.png'
-    },
-    platano: {
-      matches: ['platano', 'plátano'],
-      src: '/platano.png'
-    },
     quesito: {
       matches: ['quesito', 'queso en porciones'],
       src: '/quesito.png'
     },
     queso: {
-      matches: ['queso', 'queso manchego', 'queso fresco'],
+      matches: [
+        'queso',
+        'queso manchego',
+        'queso fresco',
+        'quesito',
+        'queso en porciones',
+        'queso fresco (40g = 0.5 raciones)',
+        'queso manchego (40g = 0.2 raciones)'
+      ],
       src: '/queso.png'
     },
     yogur: {
-      matches: ['yogur', 'yogurt', 'yogures', 'yogurts'],
+      matches: [
+        'yogur',
+        'yogurt',
+        'yogures',
+        'yogurts',
+        'yogur natural',
+        'yogur azucarado',
+        'yogur natural sin azúcar',
+        'yogur azucarado (125g = 1.5 raciones)',
+        'yogur natural sin azúcar (125g = 0.5 raciones)'
+      ],
       src: '/yogur.png'
     },
     yogurdesnatado: {
@@ -720,9 +730,12 @@ function App() {
                 </Typography>
                 {result.racionesDetalladas.map((item, index) => {
                   const itemLower = item.alimento.toLowerCase();
-                  const matchedFood = Object.values(FOOD_IMAGES).find(food => 
-                    food.matches.some(match => itemLower.includes(match.toLowerCase()))
-                  );
+                  const matchedFood = Object.values(FOOD_IMAGES).find(food => {
+                    const fullText = `${itemLower} ${item.descripcion.toLowerCase()} ${item.grupo.toLowerCase()}`;
+                    return food.matches.some(match => 
+                      fullText.includes(match.toLowerCase())
+                    );
+                  });
 
                   return matchedFood && (
                     <img 
