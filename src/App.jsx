@@ -546,11 +546,11 @@ function App() {
       src: '/pastelchocolate.png'
     },
     patatacocida: {
-      matches: ['patata', 'patatas', 'patata cocida', 'patatas cocidas', 'plato de patatas'],
+      matches: ['patata cocida', 'patatas cocidas', 'plato de patatas', 'patata', 'patatas'],
       src: '/patatacocida.png'
     },
     patatasfritas: {
-      matches: ['patatas fritas', 'patata frita', 'fritas'],
+      matches: ['patatas fritas'],
       src: '/patatasfritas.png'
     },
     pera: {
@@ -606,7 +606,7 @@ function App() {
     let racionesDetalladas = [];
     let totalRaciones = 0;
 
-    // Primero buscar si hay patatas fritas específicamente
+    // Primero buscar si hay patatas fritas
     const tienePatatasFritas = description_lower.includes('patatas fritas') || 
                               description_lower.includes('patata frita');
 
@@ -756,6 +756,11 @@ function App() {
               {result.racionesDetalladas.map((item, index) => {
                 const itemLower = item.alimento.toLowerCase();
                 const matchedFood = Object.values(FOOD_IMAGES).find(food => {
+                  // Primero verificar si es patatas fritas
+                  if (itemLower.includes('patatas fritas') || itemLower.includes('patata frita')) {
+                    return food.matches.includes('patatas fritas');
+                  }
+                  // Si no es patatas fritas, buscar otras coincidencias
                   return food.matches.some(match => 
                     itemLower.includes(match.toLowerCase())
                   );
