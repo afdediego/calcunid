@@ -43,9 +43,9 @@ function App() {
         aliases: ['pasta', 'macarrones', 'espaguetis']
       },
       patata_cocida: {
-        raciones: 1,
-        descripcion: 'Patata cocida (50g = 1 ración)',
-        aliases: ['patata cocida', 'patata hervida', 'patatas cocidas', 'patatas hervidas']
+        raciones: 4,
+        descripcion: 'Plato de patatas (200g = 4 raciones)',
+        aliases: ['patata', 'patatas', 'patata cocida', 'patatas cocidas', 'plato de patatas']
       },
       patatas_fritas: {
         raciones: 2,
@@ -60,10 +60,15 @@ function App() {
           'garbanzos hervidos', 'lentejas hervidas', 'alubias hervidas'
         ]
       },
-      guisantes: {
-        raciones: 1,
-        descripcion: 'Guisantes hervidos (60g = 1 ración)',
-        aliases: ['guisantes', 'guisantes hervidos']
+      cereales_desayuno: {
+        raciones: 1.5,
+        descripcion: 'Cereales desayuno (15g = 1.5 raciones)',
+        aliases: ['cereales', 'corn flakes']
+      },
+      muesli: {
+        raciones: 2,
+        descripcion: 'Muesli (15g = 2 raciones)',
+        aliases: ['muesli']
       }
     },
 
@@ -175,7 +180,7 @@ function App() {
       ensalada_verde: {
         raciones: 0.2,
         descripcion: 'Ensalada verde (300g = 0.2 raciones)',
-        aliases: ['ensalada verde', 'lechuga']
+        aliases: ['ensalada', 'ensalada verde', 'lechuga']
       },
       ensalada_mixta: {
         raciones: 0.5,
@@ -330,6 +335,19 @@ function App() {
         descripcion: 'Yogur natural sin azúcar (125g = 0.5 raciones)',
         aliases: ['yogur natural', 'yogur sin azúcar']
       }
+    },
+
+    carnes: {
+      pollo: {
+        raciones: 0,  // El pollo solo no tiene hidratos
+        descripcion: 'Pollo (sin hidratos)',
+        aliases: ['pollo', 'pechuga', 'muslo de pollo', 'pechuga de pollo']
+      },
+      carne: {
+        raciones: 0,  // La carne sola no tiene hidratos
+        descripcion: 'Carne (sin hidratos)',
+        aliases: ['carne', 'ternera', 'cerdo', 'lomo', 'filete']
+      }
     }
   };
 
@@ -342,15 +360,15 @@ function App() {
     let racionesDetalladas = [];
     let totalRaciones = 0;
 
-    // Función para buscar coincidencias incluyendo aliases
+    // Función mejorada para buscar coincidencias
     const findMatches = (grupo, alimentos) => {
       Object.entries(alimentos).forEach(([nombre, data]) => {
-        // Buscar coincidencias en aliases
         const found = data.aliases.some(alias => 
           description_lower.includes(alias)
         );
 
         if (found) {
+          // Incluir también alimentos con 0 raciones para mostrarlos en el desglose
           racionesDetalladas.push({
             alimento: `${data.descripcion} (${grupo})`,
             raciones: data.raciones,
