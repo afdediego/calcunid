@@ -48,7 +48,17 @@ function App() {
       pasta: {
         raciones: 4,
         descripcion: 'Plato de pasta (60g = 4 raciones)',
-        aliases: ['pasta', 'macarrones', 'espaguetis']
+        aliases: ['pasta']
+      },
+      macarrones: {
+        raciones: 4,
+        descripcion: 'Plato de macarrones (60g = 4 raciones)',
+        aliases: ['macarrones']
+      },
+      espaguetis: {
+        raciones: 4,
+        descripcion: 'Plato de espaguetis (60g = 4 raciones)',
+        aliases: ['espaguetis']
       },
       patata_cocida: {
         raciones: 4,
@@ -64,9 +74,9 @@ function App() {
         raciones: 2,
         descripcion: 'Legumbres cocidas (60g = 2 raciones)',
         aliases: [
-          'garbanzos', 'lentejas', 'alubias', 'judías', 'judías verdes',
-          'garbanzos hervidos', 'lentejas hervidas', 'alubias hervidas',
-          'judías verdes hervidas'
+          'garbanzos', 'lentejas', 'judías verdes',
+          'garbanzos hervidos', 'lentejas hervidas',
+          'judías verdes hervidas', 'alubias', 'alubia'
         ]
       },
       cereales_desayuno: {
@@ -400,7 +410,7 @@ function App() {
       src: '/alcachofas.png'
     },
     alubias: {
-      matches: ['alubias', 'alubia', 'alubias cocidas', 'alubias hervidas', 'legumbres cocidas'],
+      matches: ['alubias', 'alubia', 'legumbres cocidas (60g = 2 raciones)', 'alubias (harinas)'],
       src: '/alubias.png'
     },
     arroz: {
@@ -444,7 +454,7 @@ function App() {
       src: '/ensaladamixta.png'
     },
     espaguetis: {
-      matches: ['espaguetis', 'espagueti'],
+      matches: ['espaguetis', 'espagueti', 'plato de espaguetis (60g = 4 raciones)'],
       src: '/espaguetis.png'
     },
     flan: {
@@ -496,11 +506,11 @@ function App() {
       src: '/leche.png'
     },
     lentejas: {
-      matches: ['lentejas', 'lenteja', 'lentejas cocidas', 'lentejas hervidas'],
+      matches: ['lentejas', 'lenteja', 'lentejas cocidas', 'legumbres cocidas (60g = 2 raciones)'],
       src: '/lentejas.png'
     },
     macarrones: {
-      matches: ['macarrones', 'plato de macarrones', 'macarrones (60g = 4 raciones)'],
+      matches: ['macarrones', 'plato de macarrones', 'macarrones (60g = 4 raciones)', 'plato de macarrones (60g = 4 raciones)'],
       src: '/macarrones.png'
     },
     macedonia: {
