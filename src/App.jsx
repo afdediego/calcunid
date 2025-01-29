@@ -571,51 +571,11 @@ function App() {
       src: '/quesito.png'
     },
     queso: {
-      matches: ['queso', 'queso manchego'],
+      matches: ['queso', 'queso manchego', 'queso fresco'],
       src: '/queso.png'
     },
-    quesofresco: {
-      matches: ['queso fresco'],
-      src: '/quesofresco.png'
-    },
-    sandia: {
-      matches: ['sandia', 'sandía'],
-      src: '/sandia.png'
-    },
-    snacks: {
-      matches: ['snacks', 'snack', 'aperitivo', 'aperitivos', 'patatas de bolsa'],
-      src: '/snacks.png'
-    },
-    tarta: {
-      matches: ['tarta'],
-      src: '/tarta.png'
-    },
-    tartamanzana: {
-      matches: ['tarta de manzana'],
-      src: '/tartamanzana.png'
-    },
-    tomate: {
-      matches: ['tomate', 'tomates'],
-      src: '/tomate.png'
-    },
-    tortitaarroz: {
-      matches: ['tortita de arroz', 'tortitas de arroz'],
-      src: '/tortitaarroz.png'
-    },
-    tostada: {
-      matches: ['tostada', 'tostadas'],
-      src: '/tostada.png'
-    },
-    uvas: {
-      matches: ['uvas', 'uva'],
-      src: '/uvas.png'
-    },
-    vino: {
-      matches: ['vino'],
-      src: '/vino.png'
-    },
     yogur: {
-      matches: ['yogur', 'yogurt'],
+      matches: ['yogur', 'yogurt', 'yogures', 'yogurts'],
       src: '/yogur.png'
     },
     yogurdesnatado: {
