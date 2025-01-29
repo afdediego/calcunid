@@ -14,34 +14,321 @@ function App() {
   const [mealDescription, setMealDescription] = useState('');
   const [result, setResult] = useState(null);
 
-  // Base de datos mejorada con raciones específicas
+  // Base de datos mejorada y ampliada
   const foodDatabase = {
     harinas: {
-      pan: { raciones: 2, descripcion: 'Una rebanada de pan (40g)' },
-      bocadillo: { raciones: 2, descripcion: 'Pan de bocadillo' },
-      arroz: { raciones: 2, descripcion: 'Un plato de arroz (60g)' },
-      pasta: { raciones: 2, descripcion: 'Un plato de pasta (60g)' },
-      patatas: { raciones: 1, descripcion: 'Una patata mediana (100g)' },
-      cereales: { raciones: 1.5, descripcion: 'Un bol de cereales' },
-      galletas: { raciones: 1, descripcion: '4 galletas tipo María' },
-      tarta: { raciones: 3, descripcion: 'Una porción de tarta' },
-      hamburguesa: { raciones: 2, descripcion: 'Pan de hamburguesa' },
+      pan: {
+        raciones: 1,
+        descripcion: 'Pan (20g = 1 ración)',
+        aliases: ['pan', 'rebanada']
+      },
+      pan_molde: {
+        raciones: 1,
+        descripcion: 'Pan de molde (20g = 1 ración)',
+        aliases: ['pan de molde', 'sandwich']
+      },
+      biscotes: {
+        raciones: 1,
+        descripcion: 'Biscotes (15g = 1 ración)',
+        aliases: ['biscote', 'biscotes']
+      },
+      arroz: {
+        raciones: 4,
+        descripcion: 'Plato de arroz (60g = 4 raciones)',
+        aliases: ['arroz', 'arroz hervido']
+      },
+      pasta: {
+        raciones: 4,
+        descripcion: 'Plato de pasta (60g = 4 raciones)',
+        aliases: ['pasta', 'macarrones', 'espaguetis']
+      },
+      patata_cocida: {
+        raciones: 1,
+        descripcion: 'Patata cocida (50g = 1 ración)',
+        aliases: ['patata cocida', 'patata hervida', 'patatas cocidas', 'patatas hervidas']
+      },
+      patatas_fritas: {
+        raciones: 2,
+        descripcion: 'Patatas fritas (50g = 2 raciones)',
+        aliases: ['patatas fritas', 'patata frita', 'patatas de bolsa']
+      },
+      legumbres: {
+        raciones: 2,
+        descripcion: 'Legumbres cocidas (60g = 2 raciones)',
+        aliases: [
+          'garbanzos', 'lentejas', 'alubias', 'judías', 
+          'garbanzos hervidos', 'lentejas hervidas', 'alubias hervidas'
+        ]
+      },
+      guisantes: {
+        raciones: 1,
+        descripcion: 'Guisantes hervidos (60g = 1 ración)',
+        aliases: ['guisantes', 'guisantes hervidos']
+      }
     },
-    
+
+    cereales: {
+      cereales_desayuno: {
+        raciones: 1.5,
+        descripcion: 'Cereales desayuno (15g = 1.5 raciones)',
+        aliases: ['cereales', 'corn flakes']
+      },
+      muesli: {
+        raciones: 2,
+        descripcion: 'Muesli (15g = 2 raciones)',
+        aliases: ['muesli']
+      }
+    },
+
+    galletas: {
+      galletas_maria: {
+        raciones: 1,
+        descripcion: '4 galletas María (15g = 1 ración)',
+        aliases: ['galletas maria', 'galletas maría']
+      },
+      galletas_chocolate: {
+        raciones: 1.5,
+        descripcion: '2 galletas chocolate (15g = 1.5 raciones)',
+        aliases: ['galletas chocolate', 'galletas con chocolate']
+      }
+    },
+
     frutas: {
-      platano: { raciones: 1, descripcion: 'Un plátano mediano' },
-      manzana: { raciones: 1, descripcion: 'Una manzana mediana' },
-      pera: { raciones: 1, descripcion: 'Una pera mediana' },
-      naranja: { raciones: 1, descripcion: 'Una naranja mediana' },
-      mandarina: { raciones: 0.5, descripcion: 'Una mandarina' },
-      sandia: { raciones: 0.5, descripcion: 'Una porción de sandía' },
-      melon: { raciones: 0.5, descripcion: 'Una porción de melón' },
+      fresas: {
+        raciones: 1,
+        descripcion: 'Fresas (150g = 1 ración)',
+        aliases: ['fresas', 'fresa']
+      },
+      higos: {
+        raciones: 1,
+        descripcion: 'Higos (50g = 1 ración)',
+        aliases: ['higos', 'higo']
+      },
+      kiwi: {
+        raciones: 1,
+        descripcion: 'Kiwi (100g = 1 ración)',
+        aliases: ['kiwi']
+      },
+      mandarina: {
+        raciones: 1,
+        descripcion: 'Mandarina (100g = 1 ración)',
+        aliases: ['mandarina']
+      },
+      manzana: {
+        raciones: 1,
+        descripcion: 'Manzana (100g = 1 ración)',
+        aliases: ['manzana']
+      },
+      melocoton: {
+        raciones: 1,
+        descripcion: 'Melocotón (100g = 1 ración)',
+        aliases: ['melocoton', 'melocotón']
+      },
+      melon: {
+        raciones: 0.5,
+        descripcion: 'Melón (150g = 0.5 raciones)',
+        aliases: ['melon', 'melón']
+      },
+      naranja: {
+        raciones: 1,
+        descripcion: 'Naranja (100g = 1 ración)',
+        aliases: ['naranja']
+      },
+      pera: {
+        raciones: 1,
+        descripcion: 'Pera (100g = 1 ración)',
+        aliases: ['pera']
+      },
+      piña_jugo: {
+        raciones: 1,
+        descripcion: 'Piña en su jugo (100g = 1 ración)',
+        aliases: ['piña en su jugo', 'piña']
+      },
+      platano: {
+        raciones: 2,
+        descripcion: 'Plátano (50g = 2 raciones)',
+        aliases: ['platano', 'plátano']
+      },
+      sandia: {
+        raciones: 0.5,
+        descripcion: 'Sandía (150g = 0.5 raciones)',
+        aliases: ['sandia', 'sandía']
+      },
+      uva: {
+        raciones: 1,
+        descripcion: 'Uvas (50g = 1 ración)',
+        aliases: ['uva', 'uvas']
+      }
     },
-    
+
+    verduras: {
+      alcachofas: {
+        raciones: 0.5,
+        descripcion: 'Alcachofas (150g = 0.5 raciones)',
+        aliases: ['alcachofa', 'alcachofas']
+      },
+      coliflor: {
+        raciones: 0.5,
+        descripcion: 'Coliflor (150g = 0.5 raciones)',
+        aliases: ['coliflor']
+      },
+      ensalada_verde: {
+        raciones: 0.2,
+        descripcion: 'Ensalada verde (300g = 0.2 raciones)',
+        aliases: ['ensalada verde', 'lechuga']
+      },
+      ensalada_mixta: {
+        raciones: 0.5,
+        descripcion: 'Ensalada mixta (300g = 0.5 raciones)',
+        aliases: ['ensalada mixta']
+      },
+      tomate: {
+        raciones: 0.3,
+        descripcion: 'Tomate (300g = 0.3 raciones)',
+        aliases: ['tomate']
+      },
+      judia_verde: {
+        raciones: 0.5,
+        descripcion: 'Judía verde (150g = 0.5 raciones)',
+        aliases: ['judia verde', 'judía verde', 'judias verdes']
+      }
+    },
+
+    frutos_secos: {
+      almendras: {
+        raciones: 1,
+        descripcion: 'Almendras (30g = 1 ración)',
+        aliases: ['almendras', 'almendra']
+      },
+      nueces: {
+        raciones: 1,
+        descripcion: 'Nueces (30g = 1 ración)',
+        aliases: ['nueces', 'nuez']
+      },
+      aceitunas: {
+        raciones: 0.5,
+        descripcion: 'Aceitunas (40g = 0.5 raciones)',
+        aliases: ['aceitunas', 'aceituna']
+      }
+    },
+
+    platos_preparados: {
+      paella: {
+        raciones: 4,
+        descripcion: 'Paella (60g arroz = 4 raciones)',
+        aliases: ['paella']
+      },
+      tortilla_patata: {
+        raciones: 1,
+        descripcion: 'Tortilla de patata (100g = 1 ración)',
+        aliases: ['tortilla', 'tortilla de patata', 'tortilla española']
+      },
+      croquetas: {
+        raciones: 1,
+        descripcion: '2 croquetas (60g = 1 ración)',
+        aliases: ['croquetas', 'croqueta']
+      },
+      pizza: {
+        raciones: 2.5,
+        descripcion: 'Porción pizza (100g = 2.5 raciones)',
+        aliases: ['pizza']
+      },
+      hamburguesa: {
+        raciones: 2,
+        descripcion: 'Hamburguesa completa (pan 40g = 2 raciones)',
+        aliases: ['hamburguesa', 'burger']
+      }
+    },
+
+    postres: {
+      cruasan: {
+        raciones: 2,
+        descripcion: 'Cruasán (40g = 2 raciones)',
+        aliases: ['cruasan', 'croissant']
+      },
+      donut: {
+        raciones: 2,
+        descripcion: 'Donut (40g = 2 raciones)',
+        aliases: ['donut', 'donuts']
+      },
+      magdalena: {
+        raciones: 1.5,
+        descripcion: 'Magdalena (30g = 1.5 raciones)',
+        aliases: ['magdalena']
+      },
+      pastel_chocolate: {
+        raciones: 3,
+        descripcion: 'Pastel chocolate (50g = 3 raciones)',
+        aliases: ['pastel chocolate', 'tarta chocolate']
+      },
+      helado: {
+        raciones: 2,
+        descripcion: 'Helado (100g = 2 raciones)',
+        aliases: ['helado']
+      },
+      chocolate: {
+        raciones: 1.5,
+        descripcion: 'Chocolate (20g = 1.5 raciones)',
+        aliases: ['chocolate']
+      },
+      tarta_santiago: {
+        raciones: 3,
+        descripcion: 'Tarta Santiago (50g = 3 raciones)',
+        aliases: ['tarta santiago']
+      },
+      bizcocho: {
+        raciones: 2,
+        descripcion: 'Bizcocho (30g = 2 raciones)',
+        aliases: ['bizcocho']
+      },
+      mermelada: {
+        raciones: 1,
+        descripcion: 'Mermelada (20g = 1 ración)',
+        aliases: ['mermelada']
+      }
+    },
+
     lacteos: {
-      leche: { raciones: 1, descripcion: 'Un vaso de leche (200ml)' },
-      yogur: { raciones: 1, descripcion: 'Un yogur natural' },
-      yogur_frutas: { raciones: 1.5, descripcion: 'Un yogur de frutas' },
+      leche: {
+        raciones: 1,
+        descripcion: 'Vaso de leche (200ml = 1 ración)',
+        aliases: ['leche', 'vaso de leche']
+      },
+      queso_fresco: {
+        raciones: 0.5,
+        descripcion: 'Queso fresco (40g = 0.5 raciones)',
+        aliases: ['queso fresco']
+      },
+      quesito: {
+        raciones: 0.5,
+        descripcion: 'Quesito (30g = 0.5 raciones)',
+        aliases: ['quesito', 'queso en porciones']
+      },
+      queso_manchego: {
+        raciones: 0.2,
+        descripcion: 'Queso manchego (40g = 0.2 raciones)',
+        aliases: ['queso manchego']
+      },
+      natillas: {
+        raciones: 2,
+        descripcion: 'Natillas (200ml = 2 raciones)',
+        aliases: ['natillas']
+      },
+      flan: {
+        raciones: 2,
+        descripcion: 'Flan (100g = 2 raciones)',
+        aliases: ['flan']
+      },
+      yogur_azucarado: {
+        raciones: 1.5,
+        descripcion: 'Yogur azucarado (125g = 1.5 raciones)',
+        aliases: ['yogur azucarado', 'yogurt con azúcar']
+      },
+      yogur_natural: {
+        raciones: 0.5,
+        descripcion: 'Yogur natural sin azúcar (125g = 0.5 raciones)',
+        aliases: ['yogur natural', 'yogur sin azúcar']
+      }
     }
   };
 
@@ -50,17 +337,28 @@ function App() {
     let racionesDetalladas = [];
     let totalRaciones = 0;
 
-    Object.entries(foodDatabase).forEach(([grupo, alimentos]) => {
-      Object.entries(alimentos).forEach(([alimento, data]) => {
-        if (description_lower.includes(alimento)) {
+    // Función para buscar coincidencias incluyendo aliases
+    const findMatches = (grupo, alimentos) => {
+      Object.entries(alimentos).forEach(([nombre, data]) => {
+        // Buscar coincidencias en aliases
+        const found = data.aliases.some(alias => 
+          description_lower.includes(alias)
+        );
+
+        if (found) {
           racionesDetalladas.push({
-            alimento: data.descripcion,
+            alimento: `${data.descripcion} (${grupo})`,
             raciones: data.raciones,
             grupo: grupo
           });
           totalRaciones += data.raciones;
         }
       });
+    };
+
+    // Buscar en cada grupo de alimentos
+    Object.entries(foodDatabase).forEach(([grupo, alimentos]) => {
+      findMatches(grupo, alimentos);
     });
 
     return {
