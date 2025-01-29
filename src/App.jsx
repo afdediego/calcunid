@@ -352,52 +352,47 @@ function App() {
   };
 
   const foodImages = {
-    tortilla_patata: 'https://raw.githubusercontent.com/afdediego/calcunid/main/public/images/tortilla.png'
+    tortilla_patata: '/tortilla.png'
   };
 
   const estimateRations = (description) => {
     const description_lower = description.toLowerCase();
     let racionesDetalladas = [];
     let totalRaciones = 0;
-    let tortillaFound = false;
 
-    // Primero buscamos la tortilla de patata
-    const tortilla = foodDatabase.platos_preparados.tortilla_patata;
-    if (tortilla.aliases.some(alias => description_lower.includes(alias))) {
-        tortillaFound = true;
+    // Primero buscamos si hay tortilla
+    const hasTortilla = foodDatabase.platos_preparados.tortilla_patata.aliases.some(
+        alias => description_lower.includes(alias)
+    );
+
+    // Si hay tortilla, solo añadimos la tortilla
+    if (hasTortilla) {
+        const tortilla = foodDatabase.platos_preparados.tortilla_patata;
         racionesDetalladas.push({
             alimento: `${tortilla.descripcion} (platos_preparados)`,
             raciones: tortilla.raciones,
             grupo: 'platos_preparados'
         });
         totalRaciones += tortilla.raciones;
-    }
+    } else {
+        // Si no hay tortilla, buscamos todos los alimentos normalmente
+        Object.entries(foodDatabase).forEach(([grupo, alimentos]) => {
+            Object.entries(alimentos).forEach(([nombre, data]) => {
+                const found = data.aliases.some(alias => 
+                    description_lower.includes(alias)
+                );
 
-    // Luego buscamos el resto de alimentos
-    Object.entries(foodDatabase).forEach(([grupo, alimentos]) => {
-        Object.entries(alimentos).forEach(([nombre, data]) => {
-            // Si encontramos tortilla, saltamos las patatas y la propia tortilla
-            if (tortillaFound && 
-                (nombre === 'patata_cocida' || 
-                 nombre === 'patatas_fritas' || 
-                 nombre === 'tortilla_patata')) {
-                return;
-            }
-
-            const found = data.aliases.some(alias => 
-                description_lower.includes(alias)
-            );
-
-            if (found) {
-                racionesDetalladas.push({
-                    alimento: `${data.descripcion} (${grupo})`,
-                    raciones: data.raciones,
-                    grupo: grupo
-                });
-                totalRaciones += data.raciones;
-            }
+                if (found) {
+                    racionesDetalladas.push({
+                        alimento: `${data.descripcion} (${grupo})`,
+                        raciones: data.raciones,
+                        grupo: grupo
+                    });
+                    totalRaciones += data.raciones;
+                }
+            });
         });
-    });
+    }
 
     return {
         total: Math.round(totalRaciones * 10) / 10,
