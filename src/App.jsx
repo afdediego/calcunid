@@ -8,6 +8,7 @@ import {
   Paper,
   TextareaAutosize
 } from '@mui/material';
+import tortillaImage from './assets/images/tortilla.jpg';
 
 function App() {
   const [glucoseLevel, setGlucoseLevel] = useState('');
@@ -352,7 +353,7 @@ function App() {
   };
 
   const foodImages = {
-    tortilla_patata: '/images/tortilla.jpg'
+    tortilla_patata: '/images/tortilla.png'
   };
 
   const estimateRations = (description) => {
