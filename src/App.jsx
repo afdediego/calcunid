@@ -237,7 +237,8 @@ function App() {
       pizza: {
         raciones: 2.5,
         descripcion: 'Porción pizza (100g = 2.5 raciones)',
-        aliases: ['pizza']
+        aliases: ['pizza'],
+        imagen: 'pizza'
       },
       hamburguesa: {
         raciones: 2,
@@ -352,6 +353,22 @@ function App() {
     }
   };
 
+  // Definir un objeto con las configuraciones de imágenes
+  const FOOD_IMAGES = {
+    tortilla: {
+      matches: ['tortilla de patata', 'tortilla española'],
+      src: '/tortilla.jpg'
+    },
+    hamburguesa: {
+      matches: ['hamburguesa completa', 'hamburguesa', 'burger'],
+      src: '/hamburguesa.jpg'
+    },
+    pizza: {
+      matches: ['pizza'],
+      src: '/pizza.jpg'
+    }
+  };
+
   const estimateRations = (description) => {
     const description_lower = description.toLowerCase();
     let racionesDetalladas = [];
@@ -458,10 +475,8 @@ function App() {
           <Paper sx={{ p: 3 }}>
             {result.racionesDetalladas.some(item => {
               const itemLower = item.alimento.toLowerCase();
-              return (
-                itemLower.includes('tortilla de patata') ||
-                itemLower.includes('tortilla española') ||
-                itemLower.includes('hamburguesa completa')
+              return Object.values(FOOD_IMAGES).some(food => 
+                food.matches.some(match => itemLower.includes(match))
               );
             }) && (
               <Box sx={{ mb: 3 }}>
@@ -470,18 +485,14 @@ function App() {
                 </Typography>
                 {result.racionesDetalladas.map((item, index) => {
                   const itemLower = item.alimento.toLowerCase();
-                  let imageSrc = null;
-                  
-                  if (itemLower.includes('tortilla')) {
-                    imageSrc = '/tortilla.jpg';
-                  } else if (itemLower.includes('hamburguesa')) {
-                    imageSrc = '/hamburguesa.jpg';
-                  }
+                  const matchedFood = Object.values(FOOD_IMAGES).find(food => 
+                    food.matches.some(match => itemLower.includes(match))
+                  );
 
-                  return imageSrc && (
+                  return matchedFood && (
                     <img 
                       key={index}
-                      src={imageSrc}
+                      src={matchedFood.src}
                       alt={`Porciones de ${item.alimento}`}
                       style={{
                         width: '100%',
@@ -555,4 +566,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
