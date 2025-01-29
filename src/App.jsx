@@ -371,11 +371,11 @@ function App() {
       src: '/tortilla.png'
     },
     hamburguesa: {
-      matches: ['hamburguesa completa', 'hamburguesa', 'burger'],
+      matches: ['hamburguesa', 'hamburguesa completa', 'burger', 'hamburguesa completa (pan 40g = 2 raciones)'],
       src: '/hamburguesa.png'
     },
     pizza: {
-      matches: ['pizza', 'porción pizza', 'porción de pizza', 'pizza (platos_preparados)'],
+      matches: ['pizza', 'porción pizza', 'porción de pizza', 'porción pizza (100g = 2.5 raciones)'],
       src: '/pizza.png'
     },
     aceitunas: {
@@ -732,9 +732,14 @@ function App() {
                   const itemLower = item.alimento.toLowerCase();
                   const matchedFood = Object.values(FOOD_IMAGES).find(food => {
                     const fullText = `${itemLower} ${item.descripcion.toLowerCase()} ${item.grupo.toLowerCase()}`;
-                    return food.matches.some(match => 
-                      fullText.includes(match.toLowerCase())
-                    );
+                    try {
+                      return food.matches.some(match => 
+                        fullText.includes(match.toLowerCase())
+                      );
+                    } catch (error) {
+                      console.error('Error matching food:', error);
+                      return false;
+                    }
                   });
 
                   return matchedFood && (
