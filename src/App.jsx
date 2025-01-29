@@ -221,7 +221,8 @@ function App() {
       tortilla_patata: {
         raciones: 1,
         descripcion: 'Tortilla de patata (100g = 1 ración)',
-        aliases: ['tortilla', 'tortilla de patata', 'tortilla española']
+        aliases: ['tortilla', 'tortilla de patata', 'tortilla española'],
+        imagen: 'tortilla_patata'
       },
       croquetas: {
         raciones: 1,
@@ -330,6 +331,10 @@ function App() {
         aliases: ['yogur natural', 'yogur sin azúcar']
       }
     }
+  };
+
+  const foodImages = {
+    tortilla_patata: '/images/tortilla.jpg'
   };
 
   const estimateRations = (description) => {
@@ -476,6 +481,33 @@ function App() {
             <Typography variant="h6" sx={{ color: 'primary.main', mt: 2 }}>
               Dosis total recomendada: {result.totalUnits} unidades de insulina
             </Typography>
+
+            <Box sx={{ mt: 3 }}>
+              {result.racionesDetalladas.map((item, index) => {
+                const foodKey = Object.keys(foodDatabase[item.grupo]).find(key => 
+                  foodDatabase[item.grupo][key].descripcion === item.alimento.split(' (')[0]
+                );
+                const foodImage = foodKey && foodDatabase[item.grupo][foodKey].imagen;
+                
+                return foodImage && (
+                  <Box key={index} sx={{ mt: 2 }}>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Referencia visual de porciones:
+                    </Typography>
+                    <img 
+                      src={foodImages[foodImage]} 
+                      alt={`Porciones de ${item.alimento}`}
+                      style={{
+                        maxWidth: '100%',
+                        height: 'auto',
+                        borderRadius: '8px',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                      }}
+                    />
+                  </Box>
+                );
+              })}
+            </Box>
 
             <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}>
               ⚠️ Estos cálculos son aproximados. Consulta siempre con tu médico para ajustar las dosis.
