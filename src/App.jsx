@@ -1,7 +1,8 @@
 /**
  * App.jsx
  * Calculadora de insulina con imágenes de referencia para porciones
- * Última actualización: 2024
+ * Última actualización: 2024-03-14
+ * Versión: 1.0.1
  */
 
 import React, { useState } from 'react';
@@ -443,7 +444,7 @@ function App() {
       src: '/ensaladamixta.png'
     },
     espaguetis: {
-      matches: ['espaguetis', 'pasta'],
+      matches: ['espaguetis', 'espagueti'],
       src: '/espaguetis.png'
     },
     flan: {
@@ -495,11 +496,11 @@ function App() {
       src: '/leche.png'
     },
     lentejas: {
-      matches: ['lentejas cocidas', 'lentejas', 'lenteja', 'legumbres cocidas'],
+      matches: ['lentejas', 'lenteja', 'lentejas cocidas', 'lentejas hervidas'],
       src: '/lentejas.png'
     },
     macarrones: {
-      matches: ['macarrones'],
+      matches: ['macarrones', 'plato de macarrones', 'macarrones (60g = 4 raciones)'],
       src: '/macarrones.png'
     },
     macedonia: {
@@ -611,6 +612,10 @@ function App() {
     vino: {
       matches: ['vino', 'vino tinto', 'vino blanco', 'copa de vino'],
       src: '/vino.png'
+    },
+    pasta: {
+      matches: ['pasta', 'plato de pasta'],
+      src: '/pasta.png'
     }
   };
 
