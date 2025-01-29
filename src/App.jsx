@@ -393,6 +393,234 @@ function App() {
     arroz: {
       matches: ['arroz', 'arroz hervido'],
       src: '/arroz.png'
+    },
+    biscotes: {
+      matches: ['biscote', 'biscotes'],
+      src: '/biscote.png'
+    },
+    calamares: {
+      matches: ['calamares', 'calamar'],
+      src: '/calamares.png'
+    },
+    cereales: {
+      matches: ['cereales', 'corn flakes', 'cereales desayuno'],
+      src: '/cereales.png'
+    },
+    chocolate: {
+      matches: ['chocolate', 'tableta de chocolate'],
+      src: '/chocolate.png'
+    },
+    coliflor: {
+      matches: ['coliflor'],
+      src: '/coliflor.png'
+    },
+    donut: {
+      matches: ['donut', 'donuts'],
+      src: '/donut.png'
+    },
+    empanadillas: {
+      matches: ['empanadillas', 'empanadilla', 'empanada', 'empanadas'],
+      src: '/empanadillas.png'
+    },
+    ensalada: {
+      matches: ['ensalada', 'ensalada verde'],
+      src: '/ensalada.png'
+    },
+    ensaladamixta: {
+      matches: ['ensalada mixta'],
+      src: '/ensaladamixta.png'
+    },
+    espaguetis: {
+      matches: ['espaguetis', 'pasta', 'macarrones'],
+      src: '/espaguetis.png'
+    },
+    flan: {
+      matches: ['flan', 'flan de huevo'],
+      src: '/flan.png'
+    },
+    fresas: {
+      matches: ['fresas', 'fresa'],
+      src: '/fresas.png'
+    },
+    frutoseco: {
+      matches: ['almendras', 'nueces', 'frutos secos'],
+      src: '/frutoseco.png'
+    },
+    galletaschocolate: {
+      matches: ['galletas chocolate', 'galletas con chocolate', 'galletas de chocolate'],
+      src: '/galletaschocolate.png'
+    },
+    galletasmaria: {
+      matches: ['galletas maria', 'galletas maría', 'galletas tipo maría'],
+      src: '/galletasmaria.png'
+    },
+    garbanzos: {
+      matches: ['garbanzos', 'garbanzo'],
+      src: '/garbanzos.png'
+    },
+    guisantes: {
+      matches: ['guisantes', 'guisante'],
+      src: '/guisantes.png'
+    },
+    helado: {
+      matches: ['helado'],
+      src: '/helado.png'
+    },
+    higos: {
+      matches: ['higos', 'higo'],
+      src: '/higos.png'
+    },
+    judiaverde: {
+      matches: ['judia verde', 'judía verde', 'judias verdes'],
+      src: '/judiaverde.png'
+    },
+    kiwi: {
+      matches: ['kiwi'],
+      src: '/kiwi.png'
+    },
+    leche: {
+      matches: ['leche', 'vaso de leche'],
+      src: '/leche.png'
+    },
+    lentejas: {
+      matches: ['lentejas', 'lenteja'],
+      src: '/lentejas.png'
+    },
+    macarrones: {
+      matches: ['macarrones', 'pasta'],
+      src: '/macarrones.png'
+    },
+    macedonia: {
+      matches: ['macedonia', 'macedonia de frutas'],
+      src: '/macedonia.png'
+    },
+    magdalena: {
+      matches: ['magdalena', 'magdalenas'],
+      src: '/magdalena.png'
+    },
+    mandarina: {
+      matches: ['mandarina', 'mandarinas'],
+      src: '/mandarina.png'
+    },
+    manzana: {
+      matches: ['manzana', 'manzanas'],
+      src: '/manzana.png'
+    },
+    melocoton: {
+      matches: ['melocoton', 'melocotón'],
+      src: '/melocoton.png'
+    },
+    melon: {
+      matches: ['melon', 'melón'],
+      src: '/melon.png'
+    },
+    mermelada: {
+      matches: ['mermelada'],
+      src: '/mermelada.png'
+    },
+    muesli: {
+      matches: ['muesli'],
+      src: '/muesli.png'
+    },
+    naranja: {
+      matches: ['naranja', 'naranjas'],
+      src: '/naranja.png'
+    },
+    natillas: {
+      matches: ['natillas'],
+      src: '/natillas.png'
+    },
+    pan: {
+      matches: ['pan'],
+      src: '/pan.png'
+    },
+    panrebanada: {
+      matches: ['rebanada de pan', 'pan de molde'],
+      src: '/panrebanada.png'
+    },
+    pastelchocolate: {
+      matches: ['pastel chocolate', 'tarta chocolate'],
+      src: '/pastelchocolate.png'
+    },
+    patatacocida: {
+      matches: ['patata cocida', 'patatas cocidas'],
+      src: '/patatacocida.png'
+    },
+    patatasfritas: {
+      matches: ['patatas fritas', 'patata frita'],
+      src: '/patatasfritas.png'
+    },
+    pera: {
+      matches: ['pera', 'peras'],
+      src: '/pera.png'
+    },
+    piña: {
+      matches: ['piña', 'piña en su jugo'],
+      src: '/piña.png'
+    },
+    pizza: {
+      matches: ['pizza'],
+      src: '/pizza.png'
+    },
+    platano: {
+      matches: ['platano', 'plátano'],
+      src: '/platano.png'
+    },
+    quesito: {
+      matches: ['quesito', 'queso en porciones'],
+      src: '/quesito.png'
+    },
+    queso: {
+      matches: ['queso', 'queso manchego'],
+      src: '/queso.png'
+    },
+    quesofresco: {
+      matches: ['queso fresco'],
+      src: '/quesofresco.png'
+    },
+    sandia: {
+      matches: ['sandia', 'sandía'],
+      src: '/sandia.png'
+    },
+    snack: {
+      matches: ['snack', 'aperitivo'],
+      src: '/snack.png'
+    },
+    tarta: {
+      matches: ['tarta'],
+      src: '/tarta.png'
+    },
+    tartamanzana: {
+      matches: ['tarta de manzana'],
+      src: '/tartamanzana.png'
+    },
+    tomate: {
+      matches: ['tomate', 'tomates'],
+      src: '/tomate.png'
+    },
+    tortitaarroz: {
+      matches: ['tortita de arroz', 'tortitas de arroz'],
+      src: '/tortitaarroz.png'
+    },
+    tostada: {
+      matches: ['tostada', 'tostadas'],
+      src: '/tostada.png'
+    },
+    uvas: {
+      matches: ['uvas', 'uva'],
+      src: '/uvas.png'
+    },
+    vino: {
+      matches: ['vino'],
+      src: '/vino.png'
+    },
+    yogur: {
+      matches: ['yogur', 'yogurt'],
+      src: '/yogur.png'
+    },
+    yogurdesnatado: {
+      matches: ['yogur desnatado', 'yogur sin azúcar', 'yogur natural'],
+      src: '/yogurdesnatado.png'
     }
   };
 
