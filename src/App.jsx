@@ -2,7 +2,8 @@
  * App.jsx
  * Calculadora de insulina con imágenes de referencia para porciones
  * Última actualización: 2024-03-14
- * Versión: 1.0.1
+ * Versión: 1.0.2
+ * Cambios: Añadidos campos editables para raciones y unidad/ración
  */
 
 import React, { useState } from 'react';
@@ -21,6 +22,8 @@ function App() {
   const [glucoseLevel, setGlucoseLevel] = useState('');
   const [mealDescription, setMealDescription] = useState('');
   const [result, setResult] = useState(null);
+  const [totalRacionesEditable, setTotalRacionesEditable] = useState('');
+  const [unidadPorRacion, setUnidadPorRacion] = useState('1'); // Por defecto 1 unidad/ración
 
   // Base de datos mejorada y ampliada
   const foodDatabase = {
@@ -679,20 +682,21 @@ function App() {
     const currentGlucose = parseFloat(glucoseLevel);
     const targetGlucose = 100;
     
-    // Cálculo de corrección por glucosa
     const correctionNeeded = Math.max(currentGlucose - targetGlucose, 0);
     const correctionUnits = Math.round((correctionNeeded / 40) * 10) / 10;
     
-    // Cálculo de raciones
     const rationCalculation = estimateRations(mealDescription);
-    const carbUnits = rationCalculation.total;
+    setTotalRacionesEditable(rationCalculation.total.toString());
+    
+    const carbUnits = parseFloat(totalRacionesEditable || rationCalculation.total) * 
+                      parseFloat(unidadPorRacion || 1);
     
     const totalUnits = correctionUnits + carbUnits;
 
     setResult({
       totalUnits: Math.round(totalUnits * 10) / 10,
       correctionUnits,
-      carbUnits,
+      carbUnits: Math.round(carbUnits * 10) / 10,
       glucoseReduction: correctionNeeded,
       estimatedRations: rationCalculation.total,
       racionesDetalladas: rationCalculation.desglose,
@@ -867,7 +871,46 @@ function App() {
               <Typography variant="subtitle1" color="primary" gutterBottom>
                 Paso 3: Cálculo final
               </Typography>
-              <Typography>• Por hidratos de carbono: {result.carbUnits} unidades</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <Typography>• Total raciones:</Typography>
+                <TextField
+                  size="small"
+                  type="number"
+                  value={totalRacionesEditable}
+                  onChange={(e) => {
+                    setTotalRacionesEditable(e.target.value);
+                    const newCarbUnits = parseFloat(e.target.value || 0) * parseFloat(unidadPorRacion || 1);
+                    setResult(prev => ({
+                      ...prev,
+                      carbUnits: Math.round(newCarbUnits * 10) / 10,
+                      totalUnits: Math.round((newCarbUnits + prev.correctionUnits) * 10) / 10
+                    }));
+                  }}
+                  sx={{ width: '100px' }}
+                />
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <Typography>• Unidad/ración:</Typography>
+                <TextField
+                  size="small"
+                  type="number"
+                  value={unidadPorRacion}
+                  onChange={(e) => {
+                    setUnidadPorRacion(e.target.value);
+                    const newCarbUnits = parseFloat(totalRacionesEditable || 0) * parseFloat(e.target.value || 1);
+                    setResult(prev => ({
+                      ...prev,
+                      carbUnits: Math.round(newCarbUnits * 10) / 10,
+                      totalUnits: Math.round((newCarbUnits + prev.correctionUnits) * 10) / 10
+                    }));
+                  }}
+                  sx={{ width: '100px' }}
+                />
+              </Box>
+              <Typography>
+                • Por hidratos de carbono: {result.carbUnits} unidades 
+                ({totalRacionesEditable || 0} × {unidadPorRacion || 1} = {result.carbUnits})
+              </Typography>
               <Typography>• Por corrección de glucosa: {result.correctionUnits} unidades</Typography>
             </Box>
 
