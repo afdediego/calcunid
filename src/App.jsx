@@ -18,7 +18,6 @@ import {
   Link,
   Switch
 } from '@mui/material';
-import ejemploCalculoUGP from '/ejemplo-calculo-ugp copia.png';
 
 function App() {
   const [glucoseLevel, setGlucoseLevel] = useState('');
@@ -831,7 +830,10 @@ function App() {
                 textAlign: 'center'
               }}>
                 <Button
-                  onClick={() => window.open('/ejemplo-calculo-ugp copia.png', '_blank')}
+                  onClick={() => {
+                    const url = new URL(window.location.href);
+                    window.open(`${url.origin}/ejemplo-calculo-ugp copia.png`, '_blank');
+                  }}
                   startIcon={<span role="img" aria-label="chart">📊</span>}
                   variant="outlined"
                   color="primary"
@@ -932,11 +934,11 @@ function App() {
                     Ejemplo de cálculo:
                   </Typography>
                   <img 
-                    src="/ejemplo-calculo-ugp copia.png"
+                    src="ejemplo-calculo-ugp copia.png"
                     alt="Ejemplo de cálculo UGP"
                     style={{
                       width: '100%',
-                      maxWidth: '800px',  // Aumentado para mejor visibilidad
+                      maxWidth: '800px',
                       height: 'auto',
                       margin: '0 auto',
                       display: 'block',
