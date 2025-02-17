@@ -832,7 +832,7 @@ function App() {
                 <Button
                   onClick={() => {
                     const url = new URL(window.location.href);
-                    window.open(`${url.origin}/ejemplo-calculo-ugp copia.png`, '_blank');
+                    window.open(`${url.origin}/ejemplo-calculo-ugp-copia.png`, '_blank');
                   }}
                   startIcon={<span role="img" aria-label="chart">📊</span>}
                   variant="outlined"
@@ -927,25 +927,6 @@ function App() {
                       )
                     ).toFixed(1)}
                   </Typography>
-                </Box>
-
-                <Box sx={{ mt: 3, pt: 2, borderTop: '1px solid #e0e0e0' }}>
-                  <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-                    Ejemplo de cálculo:
-                  </Typography>
-                  <img 
-                    src="ejemplo-calculo-ugp copia.png"
-                    alt="Ejemplo de cálculo UGP"
-                    style={{
-                      width: '100%',
-                      maxWidth: '800px',
-                      height: 'auto',
-                      margin: '0 auto',
-                      display: 'block',
-                      borderRadius: '8px',
-                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                    }}
-                  />
                 </Box>
               </Box>
             </Box>
