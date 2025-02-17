@@ -821,7 +821,13 @@ function App() {
                 Información Nutricional Detallada
               </Typography>
 
-              <Box sx={{ mb: 3 }}>
+              <Box sx={{ 
+                mb: 3, 
+                p: 2, 
+                border: '1px solid #e0e0e0',
+                borderRadius: '8px',
+                backgroundColor: '#fff'
+              }}>
                 <img 
                   src="/ejemplo-calculo-ugp.png"
                   alt="Ejemplo de cálculo UGP"
@@ -831,8 +837,11 @@ function App() {
                     height: 'auto',
                     margin: '0 auto',
                     display: 'block',
-                    borderRadius: '8px',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                    borderRadius: '4px'
+                  }}
+                  onError={(e) => {
+                    console.error('Error loading image:', e);
+                    e.target.style.display = 'none';
                   }}
                 />
               </Box>
