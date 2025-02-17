@@ -729,7 +729,7 @@ function App() {
     const totalUnits = parseFloat(correctionUnits) + parseFloat(carbUnits);
 
     setResult({
-      totalUnits: Math.round(totalUnits * 10) / 10,
+      totalUnits: parseFloat(totalUnits).toFixed(1),
       correctionUnits,
       carbUnits: parseFloat(carbUnits),
       glucoseReduction: correctionNeeded,
@@ -829,23 +829,18 @@ function App() {
                 backgroundColor: '#fff',
                 textAlign: 'center'
               }}>
-                <Link
-                  href="/ejemplo-calculo-ugp.png"
+                <Button
+                  component={Link}
+                  href={`${window.location.origin}/ejemplo-calculo-ugp.png`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  sx={{
-                    textDecoration: 'none',
-                    color: 'primary.main',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 1,
-                    '&:hover': {
-                      textDecoration: 'underline'
-                    }
-                  }}
+                  startIcon={<span role="img" aria-label="chart">📊</span>}
+                  variant="outlined"
+                  color="primary"
+                  sx={{ textTransform: 'none' }}
                 >
-                  📊 Ver ejemplo de cálculo UGP
-                </Link>
+                  Ver ejemplo de cálculo UGP
+                </Button>
               </Box>
 
               <Box sx={{ 
@@ -1147,7 +1142,11 @@ function App() {
             </Box>
 
             <Typography variant="h6" sx={{ color: 'primary.main', mt: 2 }}>
-              Dosis total recomendada: {result.totalUnits} unidades de insulina
+              Dosis total recomendada: {
+                (parseFloat(result.correctionUnits) + 
+                 parseFloat((parseFloat(totalRacionesEditable) * parseFloat(unidadPorRacion)).toFixed(1))
+                ).toFixed(1)
+              } unidades de insulina
             </Typography>
 
             <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}>
