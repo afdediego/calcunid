@@ -2,8 +2,8 @@
  * App.jsx
  * Calculadora de insulina con imágenes de referencia para porciones
  * Última actualización: 2024-03-14
- * Versión: 1.0.4
- * Cambios: Mejorado el desglose de cálculos y visualización
+ * Versión: 1.0.6
+ * Cambios: Forzar nuevo despliegue en Vercel
  */
 
 import React, { useState } from 'react';
@@ -831,8 +831,10 @@ function App() {
               }}>
                 <Button
                   onClick={() => {
-                    const url = new URL(window.location.href);
-                    window.open(`${url.origin}/ejemplo-calculo-ugp-copia.png`, '_blank');
+                    const baseUrl = window.location.origin;
+                    const imageUrl = `${baseUrl}/ejemplo-calculo-ugp.png`;
+                    const newWindow = window.open();
+                    newWindow.document.write(`<img src="${imageUrl}" alt="Ejemplo de cálculo UGP" style="max-width: 100%;">`);
                   }}
                   startIcon={<span role="img" aria-label="chart">📊</span>}
                   variant="outlined"
