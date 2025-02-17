@@ -2,8 +2,8 @@
  * App.jsx
  * Calculadora de insulina con imágenes de referencia para porciones
  * Última actualización: 2024-03-14
- * Versión: 1.0.2
- * Cambios: Añadidos campos editables para raciones y unidad/ración
+ * Versión: 1.0.3
+ * Cambios: Añadido modo de cálculo nutricional con UGP
  */
 
 import React, { useState } from 'react';
@@ -15,7 +15,8 @@ import {
   Box,
   Paper,
   TextareaAutosize,
-  Link
+  Link,
+  Switch
 } from '@mui/material';
 
 function App() {
@@ -24,6 +25,12 @@ function App() {
   const [result, setResult] = useState(null);
   const [totalRacionesEditable, setTotalRacionesEditable] = useState('');
   const [unidadPorRacion, setUnidadPorRacion] = useState('1'); // Por defecto 1 unidad/ración
+  const [useNutritionalInfo, setUseNutritionalInfo] = useState(false);
+  const [nutritionalInfo, setNutritionalInfo] = useState({
+    carbGrams: '',
+    fatGrams: '',
+    proteinGrams: ''
+  });
 
   // Base de datos mejorada y ampliada
   const foodDatabase = {
@@ -632,6 +639,22 @@ function App() {
     }
   };
 
+  // Añadir las constantes de conversión
+  const CONVERSION_FACTORS = {
+    CARB_TO_RATION: 10, // 10g de hidratos = 1 ración
+    UGP_KCAL: 150,      // 1 UGP = 150 kcal
+    PROTEIN_KCAL: 4,    // 1g proteína = 4 kcal
+    FAT_KCAL: 9         // 1g grasa = 9 kcal
+  };
+
+  // Función para calcular UGP y raciones
+  const calculateUGP = (fat, protein) => {
+    const fatKcal = fat * CONVERSION_FACTORS.FAT_KCAL;
+    const proteinKcal = protein * CONVERSION_FACTORS.PROTEIN_KCAL;
+    const totalKcal = fatKcal + proteinKcal;
+    return Math.round((totalKcal / CONVERSION_FACTORS.UGP_KCAL) * 10) / 10;
+  };
+
   const estimateRations = (description) => {
     const description_lower = description.toLowerCase();
     let racionesDetalladas = [];
@@ -685,10 +708,22 @@ function App() {
     const correctionNeeded = Math.max(currentGlucose - targetGlucose, 0);
     const correctionUnits = Math.round((correctionNeeded / 40) * 10) / 10;
     
-    const rationCalculation = estimateRations(mealDescription);
-    setTotalRacionesEditable(rationCalculation.total.toString());
+    let totalRaciones;
+    if (useNutritionalInfo) {
+      const carbRaciones = parseFloat(nutritionalInfo.carbGrams || 0) / CONVERSION_FACTORS.CARB_TO_RATION;
+      const ugpRaciones = calculateUGP(
+        parseFloat(nutritionalInfo.fatGrams || 0),
+        parseFloat(nutritionalInfo.proteinGrams || 0)
+      );
+      totalRaciones = carbRaciones + ugpRaciones;
+    } else {
+      const rationCalculation = estimateRations(mealDescription);
+      totalRaciones = rationCalculation.total;
+    }
     
-    const carbUnits = parseFloat(totalRacionesEditable || rationCalculation.total) * 
+    setTotalRacionesEditable(totalRaciones.toString());
+    
+    const carbUnits = parseFloat(totalRacionesEditable || totalRaciones) * 
                       parseFloat(unidadPorRacion || 1);
     
     const totalUnits = correctionUnits + carbUnits;
@@ -698,8 +733,8 @@ function App() {
       correctionUnits,
       carbUnits: Math.round(carbUnits * 10) / 10,
       glucoseReduction: correctionNeeded,
-      estimatedRations: rationCalculation.total,
-      racionesDetalladas: rationCalculation.desglose,
+      estimatedRations: totalRaciones,
+      racionesDetalladas: useNutritionalInfo ? [] : estimateRations(mealDescription).desglose,
       currentGlucose,
       targetGlucose
     });
@@ -757,17 +792,137 @@ function App() {
         </Box>
 
         <Paper sx={{ p: 3, mb: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            Describe tu comida
-          </Typography>
-          <TextareaAutosize
-            minRows={3}
-            placeholder="Describe tu comida de forma general (ejemplo: ensalada de lechuga con tomate, atún, cebolla, huevo cocido y una mazorca de maíz)"
-            style={{ width: '100%', padding: '10px', marginBottom: '20px' }}
-            value={mealDescription}
-            onChange={(e) => setMealDescription(e.target.value)}
-          />
-          
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 2, 
+            mb: 2,
+            backgroundColor: '#f5f5f5',
+            padding: '1rem',
+            borderRadius: '4px'
+          }}>
+            <Typography variant="subtitle1" color="primary">
+              Modo de cálculo:
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography>Normal</Typography>
+              <Switch
+                checked={useNutritionalInfo}
+                onChange={(e) => setUseNutritionalInfo(e.target.checked)}
+                color="primary"
+              />
+              <Typography>Información nutricional</Typography>
+            </Box>
+          </Box>
+
+          {useNutritionalInfo ? (
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="h6" gutterBottom color="primary">
+                Información Nutricional Detallada
+              </Typography>
+              
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: 'column',
+                gap: 2,
+                mb: 2,
+                p: 2,
+                border: '1px solid #e0e0e0',
+                borderRadius: 1,
+                backgroundColor: '#fafafa'
+              }}>
+                <Typography variant="subtitle2" color="textSecondary">
+                  Introduce los valores nutricionales por 100g de alimento:
+                </Typography>
+                
+                <TextField
+                  label="Gramos de Hidratos de Carbono"
+                  type="number"
+                  value={nutritionalInfo.carbGrams}
+                  onChange={(e) => {
+                    const carbs = parseFloat(e.target.value || 0);
+                    setNutritionalInfo(prev => ({
+                      ...prev,
+                      carbGrams: e.target.value
+                    }));
+                    const raciones = carbs / CONVERSION_FACTORS.CARB_TO_RATION;
+                    setTotalRacionesEditable(raciones.toFixed(1));
+                  }}
+                  fullWidth
+                />
+
+                <TextField
+                  label="Gramos de Grasas"
+                  type="number"
+                  value={nutritionalInfo.fatGrams}
+                  onChange={(e) => {
+                    setNutritionalInfo(prev => ({
+                      ...prev,
+                      fatGrams: e.target.value
+                    }));
+                  }}
+                  fullWidth
+                />
+
+                <TextField
+                  label="Gramos de Proteínas"
+                  type="number"
+                  value={nutritionalInfo.proteinGrams}
+                  onChange={(e) => {
+                    setNutritionalInfo(prev => ({
+                      ...prev,
+                      proteinGrams: e.target.value
+                    }));
+                  }}
+                  fullWidth
+                />
+
+                <Box sx={{ 
+                  mt: 2, 
+                  p: 2, 
+                  backgroundColor: '#f0f7ff', 
+                  borderRadius: 1,
+                  border: '1px solid #90caf9'
+                }}>
+                  <Typography variant="subtitle1" gutterBottom color="primary">
+                    Resultados del cálculo:
+                  </Typography>
+                  <Typography>
+                    Raciones de HC: {(parseFloat(nutritionalInfo.carbGrams || 0) / CONVERSION_FACTORS.CARB_TO_RATION).toFixed(1)}
+                  </Typography>
+                  <Typography>
+                    UGP: {calculateUGP(
+                      parseFloat(nutritionalInfo.fatGrams || 0),
+                      parseFloat(nutritionalInfo.proteinGrams || 0)
+                    )}
+                  </Typography>
+                  <Typography fontWeight="bold">
+                    Raciones totales: {(
+                      parseFloat(nutritionalInfo.carbGrams || 0) / CONVERSION_FACTORS.CARB_TO_RATION +
+                      calculateUGP(
+                        parseFloat(nutritionalInfo.fatGrams || 0),
+                        parseFloat(nutritionalInfo.proteinGrams || 0)
+                      )
+                    ).toFixed(1)}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+          ) : (
+            <>
+              <Typography variant="h6" gutterBottom>
+                Describe tu comida
+              </Typography>
+              <TextareaAutosize
+                minRows={3}
+                placeholder="Describe tu comida de forma general (ejemplo: ensalada de lechuga con tomate, atún, cebolla, huevo cocido y una mazorca de maíz)"
+                style={{ width: '100%', padding: '10px', marginBottom: '20px' }}
+                value={mealDescription}
+                onChange={(e) => setMealDescription(e.target.value)}
+              />
+            </>
+          )}
+
           <TextField
             fullWidth
             label="Nivel de glucosa actual (mg/dL)"
