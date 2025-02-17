@@ -723,15 +723,15 @@ function App() {
     
     setTotalRacionesEditable(totalRaciones.toString());
     
-    const carbUnits = parseFloat(totalRacionesEditable || totalRaciones) * 
-                      parseFloat(unidadPorRacion || 1);
+    const carbUnits = (parseFloat(totalRacionesEditable || totalRaciones) * 
+                      parseFloat(unidadPorRacion || 1)).toFixed(1);
     
-    const totalUnits = correctionUnits + carbUnits;
+    const totalUnits = parseFloat(correctionUnits) + parseFloat(carbUnits);
 
     setResult({
       totalUnits: Math.round(totalUnits * 10) / 10,
       correctionUnits,
-      carbUnits: Math.round(carbUnits * 10) / 10,
+      carbUnits: parseFloat(carbUnits),
       glucoseReduction: correctionNeeded,
       estimatedRations: totalRaciones,
       racionesDetalladas: useNutritionalInfo ? [] : estimateRations(mealDescription).desglose,
@@ -826,24 +826,26 @@ function App() {
                 p: 2, 
                 border: '1px solid #e0e0e0',
                 borderRadius: '8px',
-                backgroundColor: '#fff'
+                backgroundColor: '#fff',
+                textAlign: 'center'
               }}>
-                <img 
-                  src="/ejemplo-calculo-ugp.png"
-                  alt="Ejemplo de cálculo UGP"
-                  style={{
-                    width: '100%',
-                    maxWidth: '800px',
-                    height: 'auto',
-                    margin: '0 auto',
-                    display: 'block',
-                    borderRadius: '4px'
+                <Link
+                  href="/ejemplo-calculo-ugp.png"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{
+                    textDecoration: 'none',
+                    color: 'primary.main',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    '&:hover': {
+                      textDecoration: 'underline'
+                    }
                   }}
-                  onError={(e) => {
-                    console.error('Error loading image:', e);
-                    e.target.style.display = 'none';
-                  }}
-                />
+                >
+                  📊 Ver ejemplo de cálculo UGP
+                </Link>
               </Box>
 
               <Box sx={{ 
@@ -1132,7 +1134,9 @@ function App() {
                 />
               </Box>
               <Typography>
-                • Por hidratos de carbono: {result.carbUnits} unidades
+                • Por hidratos de carbono: {
+                  (parseFloat(totalRacionesEditable) * parseFloat(unidadPorRacion)).toFixed(1)
+                } unidades
                 <Typography component="span" sx={{ color: 'text.secondary', ml: 1 }}>
                   ({totalRacionesEditable} raciones × {unidadPorRacion} unidades/ración = {
                     (parseFloat(totalRacionesEditable) * parseFloat(unidadPorRacion)).toFixed(1)
