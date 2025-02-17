@@ -2,8 +2,8 @@
  * App.jsx
  * Calculadora de insulina con imágenes de referencia para porciones
  * Última actualización: 2024-03-14
- * Versión: 1.0.3
- * Cambios: Añadido modo de cálculo nutricional con UGP
+ * Versión: 1.0.4
+ * Cambios: Mejorado el desglose de cálculos y visualización
  */
 
 import React, { useState } from 'react';
@@ -820,7 +820,23 @@ function App() {
               <Typography variant="h6" gutterBottom color="primary">
                 Información Nutricional Detallada
               </Typography>
-              
+
+              <Box sx={{ mb: 3 }}>
+                <img 
+                  src="/ejemplo-calculo-ugp.png"
+                  alt="Ejemplo de cálculo UGP"
+                  style={{
+                    width: '100%',
+                    maxWidth: '800px',
+                    height: 'auto',
+                    margin: '0 auto',
+                    display: 'block',
+                    borderRadius: '8px',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                  }}
+                />
+              </Box>
+
               <Box sx={{ 
                 display: 'flex', 
                 flexDirection: 'column',
@@ -905,6 +921,25 @@ function App() {
                       )
                     ).toFixed(1)}
                   </Typography>
+                </Box>
+
+                <Box sx={{ mt: 3, pt: 2, borderTop: '1px solid #e0e0e0' }}>
+                  <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+                    Ejemplo de cálculo:
+                  </Typography>
+                  <img 
+                    src="/ejemplo-calculo-ugp.png"
+                    alt="Ejemplo de cálculo UGP"
+                    style={{
+                      width: '100%',
+                      maxWidth: '800px',  // Aumentado para mejor visibilidad
+                      height: 'auto',
+                      margin: '0 auto',
+                      display: 'block',
+                      borderRadius: '8px',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                    }}
+                  />
                 </Box>
               </Box>
             </Box>
@@ -999,14 +1034,39 @@ function App() {
               <Typography variant="subtitle1" color="primary" gutterBottom>
                 Paso 1: Cálculo de raciones por alimentos
               </Typography>
-              {result.racionesDetalladas.map((item, index) => (
-                <Typography key={index}>
-                  • {item.alimento}: {item.raciones} raciones
-                </Typography>
-              ))}
-              <Typography sx={{ mt: 1 }} fontWeight="bold">
-                Total de raciones: {result.estimatedRations}
-              </Typography>
+              {useNutritionalInfo ? (
+                <>
+                  <Typography>• Cálculo por información nutricional:</Typography>
+                  <Typography sx={{ pl: 2 }}>
+                    - Raciones de HC: {(parseFloat(nutritionalInfo.carbGrams || 0) / CONVERSION_FACTORS.CARB_TO_RATION).toFixed(1)} 
+                    ({nutritionalInfo.carbGrams}g ÷ {CONVERSION_FACTORS.CARB_TO_RATION}g/ración)
+                  </Typography>
+                  <Typography sx={{ pl: 2 }}>
+                    - UGP: {calculateUGP(
+                      parseFloat(nutritionalInfo.fatGrams || 0),
+                      parseFloat(nutritionalInfo.proteinGrams || 0)
+                    )} 
+                    ({nutritionalInfo.fatGrams}g × 9 kcal + {nutritionalInfo.proteinGrams}g × 4 kcal = {
+                      parseFloat(nutritionalInfo.fatGrams || 0) * 9 + parseFloat(nutritionalInfo.proteinGrams || 0) * 4
+                    } kcal ÷ 150 kcal/UGP)
+                  </Typography>
+                  <Typography sx={{ pl: 2, mt: 1 }} fontWeight="bold">
+                    Total raciones = Raciones HC + UGP = {result.estimatedRations}
+                  </Typography>
+                </>
+              ) : (
+                <>
+                  <Typography>• Desglose de raciones por alimento:</Typography>
+                  {result.racionesDetalladas.map((item, index) => (
+                    <Typography key={index} sx={{ pl: 2 }}>
+                      - {item.alimento}: {item.raciones} raciones
+                    </Typography>
+                  ))}
+                  <Typography sx={{ pl: 2, mt: 1 }} fontWeight="bold">
+                    Total raciones = Suma de todas las raciones = {result.estimatedRations}
+                  </Typography>
+                </>
+              )}
             </Box>
 
             <Box sx={{ mb: 3 }}>
@@ -1063,8 +1123,12 @@ function App() {
                 />
               </Box>
               <Typography>
-                • Por hidratos de carbono: {result.carbUnits} unidades 
-                ({totalRacionesEditable || 0} × {unidadPorRacion || 1} = {result.carbUnits})
+                • Por hidratos de carbono: {result.carbUnits} unidades
+                <Typography component="span" sx={{ color: 'text.secondary', ml: 1 }}>
+                  ({totalRacionesEditable} raciones × {unidadPorRacion} unidades/ración = {
+                    (parseFloat(totalRacionesEditable) * parseFloat(unidadPorRacion)).toFixed(1)
+                  } unidades)
+                </Typography>
               </Typography>
               <Typography>• Por corrección de glucosa: {result.correctionUnits} unidades</Typography>
             </Box>
