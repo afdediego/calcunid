@@ -831,10 +831,25 @@ function App() {
               }}>
                 <Button
                   onClick={() => {
-                    const baseUrl = window.location.origin;
-                    const imageUrl = `${baseUrl}/ejemplo-calculo-ugp.png`;
-                    const newWindow = window.open();
-                    newWindow.document.write(`<img src="${imageUrl}" alt="Ejemplo de cálculo UGP" style="max-width: 100%;">`);
+                    // Abrir la imagen en una nueva ventana con HTML completo
+                    const newWindow = window.open('', '_blank');
+                    newWindow.document.write(`
+                      <!DOCTYPE html>
+                      <html>
+                        <head>
+                          <title>Ejemplo de cálculo UGP</title>
+                          <meta charset="utf-8">
+                          <style>
+                            body { margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f5f5f5; }
+                            img { max-width: 100%; height: auto; }
+                          </style>
+                        </head>
+                        <body>
+                          <img src="/ejemplo-calculo-ugp.png" alt="Ejemplo de cálculo UGP">
+                        </body>
+                      </html>
+                    `);
+                    newWindow.document.close();
                   }}
                   startIcon={<span role="img" aria-label="chart">📊</span>}
                   variant="outlined"
