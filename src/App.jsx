@@ -1108,6 +1108,14 @@ function App() {
                   sx={{ width: '100px' }}
                 />
               </Box>
+              
+              <Typography sx={{ mb: 2 }}>
+                • Total Hidratos de Carbono: {(parseFloat(totalRacionesEditable || 0) * CONVERSION_FACTORS.CARB_TO_RATION).toFixed(1)} g
+                <Typography component="span" sx={{ color: 'text.secondary', ml: 1 }}>
+                  ({totalRacionesEditable} raciones × {CONVERSION_FACTORS.CARB_TO_RATION} g/ración)
+                </Typography>
+              </Typography>
+
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <Typography>• Unidad/ración:</Typography>
                 <TextField
