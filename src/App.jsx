@@ -887,7 +887,7 @@ function App() {
                 backgroundColor: '#fafafa'
               }}>
                 <Typography variant="subtitle2" color="textSecondary">
-                  Introduce los valores nutricionales por cada 100g de alimento que vayas a ingerir (normalmente la información nutricional viene detallada por cada 100g de alimento, teniendo esto en cuenta debemos hacer el calculo del total de comida que vayamos a ingerir):
+                  Introduce los valores nutricionales (ten en cuenta que suelen estar expresados por cada 100g de alimento, por lo que deberás ajustar cada valor según la cantidad total de gramos que vayas a ingerir):
                 </Typography>
                 
                 <TextField
