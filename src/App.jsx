@@ -31,7 +31,7 @@ function App() {
     fatGrams: '',
     proteinGrams: ''
   });
-  const [factorCorreccion, setFactorCorreccion] = useState('40'); // Por defecto 40
+  const [factorCorreccion, setFactorCorreccion] = useState('40'); // Inicializado a 40
 
   // Base de datos mejorada y ampliada
   const foodDatabase = {
@@ -1091,6 +1091,8 @@ function App() {
               <Typography variant="subtitle1" color="primary" gutterBottom>
                 Paso 3: Cálculo final
               </Typography>
+              
+              {/* Campo editable para Total raciones */}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <Typography>• Total raciones:</Typography>
                 <TextField
@@ -1110,13 +1112,7 @@ function App() {
                 />
               </Box>
               
-              <Typography sx={{ mb: 2 }}>
-                • Total Hidratos de Carbono: {(parseFloat(totalRacionesEditable || 0) * CONVERSION_FACTORS.CARB_TO_RATION).toFixed(1)} g
-                <Typography component="span" sx={{ color: 'text.secondary', ml: 1 }}>
-                  ({totalRacionesEditable} raciones × {CONVERSION_FACTORS.CARB_TO_RATION} g/ración)
-                </Typography>
-              </Typography>
-
+              {/* Campo editable para Unidad/ración */}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <Typography>• Unidad/ración:</Typography>
                 <TextField
@@ -1136,6 +1132,7 @@ function App() {
                 />
               </Box>
 
+              {/* Campo editable para Factor de corrección */}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <Typography>• Factor de corrección (mg/dL):</Typography>
                 <TextField
@@ -1144,11 +1141,19 @@ function App() {
                   value={factorCorreccion}
                   onChange={(e) => {
                     setFactorCorreccion(e.target.value);
-                    const newCorrectionUnits = Math.round((result.glucoseReduction / parseFloat(e.target.value || 40)) * 10) / 10;
+                    // Recalcular las unidades de corrección
+                    const correctionNeeded = Math.max(result.currentGlucose - result.targetGlucose, 0);
+                    const newCorrectionUnits = Math.round((correctionNeeded / parseFloat(e.target.value || 40)) * 10) / 10;
+                    
+                    // Recalcular las unidades totales
+                    const carbUnits = parseFloat(totalRacionesEditable || 0) * parseFloat(unidadPorRacion || 1);
+                    const newTotalUnits = Math.round((carbUnits + newCorrectionUnits) * 10) / 10;
+                    
+                    // Actualizar el resultado
                     setResult(prev => ({
                       ...prev,
                       correctionUnits: newCorrectionUnits,
-                      totalUnits: Math.round((prev.carbUnits + newCorrectionUnits) * 10) / 10
+                      totalUnits: newTotalUnits.toFixed(1)
                     }));
                   }}
                   sx={{ width: '100px' }}
