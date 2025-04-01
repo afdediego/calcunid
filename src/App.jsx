@@ -808,8 +808,8 @@ function App() {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Typography>Por información en gramos de comida</Typography>
               <Switch
-                checked={useNutritionalInfo}
-                onChange={(e) => setUseNutritionalInfo(e.target.checked)}
+                checked={!useNutritionalInfo}
+                onChange={(e) => setUseNutritionalInfo(!e.target.checked)}
                 color="primary"
                 sx={{
                   '& .MuiSwitch-track': {
