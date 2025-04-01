@@ -707,7 +707,7 @@ function App() {
     const targetGlucose = 100;
     
     const correctionNeeded = Math.max(currentGlucose - targetGlucose, 0);
-    const correctionUnits = Math.round((correctionNeeded / parseFloat(factorCorreccion || 40)) * 10) / 10;
+    const correctionUnits = Math.round((correctionNeeded / parseFloat(factorCorreccion)) * 10) / 10;
     
     let totalRaciones;
     if (useNutritionalInfo) {
@@ -724,15 +724,15 @@ function App() {
     
     setTotalRacionesEditable(totalRaciones.toString());
     
-    const carbUnits = (parseFloat(totalRacionesEditable || totalRaciones) * 
-                      parseFloat(unidadPorRacion || 1)).toFixed(1);
+    const carbUnits = parseFloat((parseFloat(totalRacionesEditable || totalRaciones) * 
+                      parseFloat(unidadPorRacion || 1)).toFixed(1));
     
-    const totalUnits = parseFloat(correctionUnits) + parseFloat(carbUnits);
+    const totalUnits = parseFloat(correctionUnits) + carbUnits;
 
     setResult({
-      totalUnits: parseFloat(totalUnits).toFixed(1),
+      totalUnits: totalUnits.toFixed(1),
       correctionUnits,
-      carbUnits: parseFloat(carbUnits),
+      carbUnits,
       glucoseReduction: correctionNeeded,
       estimatedRations: totalRaciones,
       racionesDetalladas: useNutritionalInfo ? [] : estimateRations(mealDescription).desglose,
@@ -1140,14 +1140,18 @@ function App() {
                   type="number"
                   value={factorCorreccion}
                   onChange={(e) => {
-                    setFactorCorreccion(e.target.value);
+                    const newFactorCorreccion = e.target.value;
+                    setFactorCorreccion(newFactorCorreccion);
+                    
                     // Recalcular las unidades de corrección
                     const correctionNeeded = Math.max(result.currentGlucose - result.targetGlucose, 0);
-                    const newCorrectionUnits = Math.round((correctionNeeded / parseFloat(e.target.value || 40)) * 10) / 10;
+                    const newCorrectionUnits = Math.round((correctionNeeded / parseFloat(newFactorCorreccion)) * 10) / 10;
                     
-                    // Recalcular las unidades totales
+                    // Mantener las unidades por carbohidratos
                     const carbUnits = parseFloat(totalRacionesEditable || 0) * parseFloat(unidadPorRacion || 1);
-                    const newTotalUnits = Math.round((carbUnits + newCorrectionUnits) * 10) / 10;
+                    
+                    // Calcular el nuevo total
+                    const newTotalUnits = parseFloat(carbUnits) + parseFloat(newCorrectionUnits);
                     
                     // Actualizar el resultado
                     setResult(prev => ({
@@ -1170,7 +1174,7 @@ function App() {
                   } unidades)
                 </Typography>
               </Typography>
-              <Typography>• Por corrección de glucosa: {result.correctionUnits} unidades</Typography>
+              <Typography>• Por corrección de glucosa (para llegar a 100): {result.correctionUnits} unidades</Typography>
             </Box>
 
             <Typography variant="h6" sx={{ color: 'primary.main', mt: 2 }}>
