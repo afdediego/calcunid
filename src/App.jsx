@@ -834,7 +834,7 @@ function App() {
           {useNutritionalInfo ? (
             <Box sx={{ mt: 2 }}>
               <Typography variant="h6" gutterBottom color="primary">
-                Información Nutricional Detallada
+                Información Nutricional Detallada en gramos
               </Typography>
 
               <Box sx={{ 
@@ -970,7 +970,7 @@ function App() {
           ) : (
             <>
               <Typography variant="h6" gutterBottom>
-                Describe tu comida
+                Describe tus raciones de comida
               </Typography>
               <TextareaAutosize
                 minRows={3}
