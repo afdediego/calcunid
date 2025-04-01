@@ -722,10 +722,11 @@ function App() {
       totalRaciones = rationCalculation.total;
     }
     
+    // Actualizar totalRacionesEditable antes de usarlo en los cálculos
     setTotalRacionesEditable(totalRaciones.toString());
     
-    const carbUnits = parseFloat((parseFloat(totalRacionesEditable || totalRaciones) * 
-                      parseFloat(unidadPorRacion || 1)).toFixed(1));
+    // Usar directamente totalRaciones en vez de totalRacionesEditable
+    const carbUnits = parseFloat((totalRaciones * parseFloat(unidadPorRacion || 1)).toFixed(1));
     
     const totalUnits = parseFloat(correctionUnits) + carbUnits;
 
