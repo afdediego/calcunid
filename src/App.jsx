@@ -806,13 +806,13 @@ function App() {
               Modo de cálculo:
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography>Normal</Typography>
+              <Typography>Por información en gramos</Typography>
               <Switch
-                checked={useNutritionalInfo}
-                onChange={(e) => setUseNutritionalInfo(e.target.checked)}
+                checked={!useNutritionalInfo}
+                onChange={(e) => setUseNutritionalInfo(!e.target.checked)}
                 color="primary"
               />
-              <Typography>Información nutricional</Typography>
+              <Typography>Por información en raciones</Typography>
             </Box>
           </Box>
 
@@ -890,6 +890,10 @@ function App() {
                   }}
                   fullWidth
                 />
+
+                <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 1 }}>
+                  Si quieres puedes añadir los gramos de grasas y proteínas para tener en cuenta el cálculo con UGP (Unidad Grasa Proteína):
+                </Typography>
 
                 <TextField
                   label="Gramos de Grasas"
