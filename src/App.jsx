@@ -1164,38 +1164,6 @@ function App() {
                 />
               </Box>
 
-              {/* Campo editable para Factor de corrección */}
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <Typography>• Factor de corrección (mg/dL):</Typography>
-                <TextField
-                  size="small"
-                  type="number"
-                  value={factorCorreccion}
-                  onChange={(e) => {
-                    const newFactorCorreccion = e.target.value;
-                    setFactorCorreccion(newFactorCorreccion);
-                    
-                    // Recalcular las unidades de corrección
-                    const correctionNeeded = Math.max(result.currentGlucose - result.targetGlucose, 0);
-                    const newCorrectionUnits = Math.round((correctionNeeded / parseFloat(newFactorCorreccion)) * 10) / 10;
-                    
-                    // Mantener las unidades por carbohidratos
-                    const carbUnits = parseFloat(totalRacionesEditable || 0) * parseFloat(unidadPorRacion || 1);
-                    
-                    // Calcular el nuevo total
-                    const newTotalUnits = parseFloat(carbUnits) + parseFloat(newCorrectionUnits);
-                    
-                    // Actualizar el resultado
-                    setResult(prev => ({
-                      ...prev,
-                      correctionUnits: newCorrectionUnits,
-                      totalUnits: newTotalUnits.toFixed(1)
-                    }));
-                  }}
-                  sx={{ width: '100px' }}
-                />
-              </Box>
-
               <Typography>
                 • Por hidratos de carbono: {
                   (parseFloat(totalRacionesEditable) * parseFloat(unidadPorRacion)).toFixed(1)
