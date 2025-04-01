@@ -25,7 +25,7 @@ function App() {
   const [result, setResult] = useState(null);
   const [totalRacionesEditable, setTotalRacionesEditable] = useState('');
   const [unidadPorRacion, setUnidadPorRacion] = useState('1'); // Por defecto 1 unidad/ración
-  const [useNutritionalInfo, setUseNutritionalInfo] = useState(false);
+  const [useNutritionalInfo, setUseNutritionalInfo] = useState(true);
   const [nutritionalInfo, setNutritionalInfo] = useState({
     carbGrams: '',
     fatGrams: '',
@@ -806,13 +806,18 @@ function App() {
               Modo de cálculo:
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography>Por información en gramos</Typography>
+              <Typography>Por información en gramos de comida</Typography>
               <Switch
-                checked={!useNutritionalInfo}
-                onChange={(e) => setUseNutritionalInfo(!e.target.checked)}
+                checked={useNutritionalInfo}
+                onChange={(e) => setUseNutritionalInfo(e.target.checked)}
                 color="primary"
+                sx={{
+                  '& .MuiSwitch-track': {
+                    backgroundColor: 'grey.400'
+                  }
+                }}
               />
-              <Typography>Por información en raciones</Typography>
+              <Typography>Por información en raciones de comida</Typography>
             </Box>
           </Box>
 
