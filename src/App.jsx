@@ -703,7 +703,7 @@ function App() {
   };
 
   const calculateInsulin = () => {
-    const currentGlucose = parseFloat(glucoseLevel);
+    const currentGlucose = glucoseLevel === '' ? 100 : parseFloat(glucoseLevel);
     const targetGlucose = 100;
     
     const correctionNeeded = Math.max(currentGlucose - targetGlucose, 0);
@@ -737,7 +737,8 @@ function App() {
       estimatedRations: totalRaciones,
       racionesDetalladas: useNutritionalInfo ? [] : estimateRations(mealDescription).desglose,
       currentGlucose,
-      targetGlucose
+      targetGlucose,
+      isDefaultGlucose: glucoseLevel === ''
     });
   };
 
@@ -974,7 +975,7 @@ function App() {
 
           <TextField
             fullWidth
-            label="Nivel de glucosa actual (mg/dL)"
+            label="Añade tu nivel de glucosa actual (mg/dL)"
             type="number"
             value={glucoseLevel}
             onChange={(e) => setGlucoseLevel(e.target.value)}
@@ -1087,7 +1088,11 @@ function App() {
               <Typography variant="subtitle1" color="primary" gutterBottom>
                 Paso 2: Corrección de glucosa
               </Typography>
-              <Typography>• Glucosa actual: {result.currentGlucose} mg/dL</Typography>
+              <Typography>
+                • Glucosa actual: {result.isDefaultGlucose ? 
+                  "Al no añadirse valor se toma el valor objetivo" : 
+                  `${result.currentGlucose} mg/dL`}
+              </Typography>
               <Typography>• Objetivo de glucosa: {result.targetGlucose} mg/dL</Typography>
               <Typography>• Necesita reducir: {result.glucoseReduction} mg/dL</Typography>
               
