@@ -1081,9 +1081,41 @@ function App() {
               <Typography>• Glucosa actual: {result.currentGlucose} mg/dL</Typography>
               <Typography>• Objetivo de glucosa: {result.targetGlucose} mg/dL</Typography>
               <Typography>• Necesita reducir: {result.glucoseReduction} mg/dL</Typography>
-              <Typography>• Factor de corrección: 1 unidad reduce 40 mg/dL</Typography>
+              
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <Typography>• Factor de corrección:</Typography>
+                <TextField
+                  size="small"
+                  type="number"
+                  value={factorCorreccion}
+                  onChange={(e) => {
+                    const newFactorCorreccion = e.target.value;
+                    setFactorCorreccion(newFactorCorreccion);
+                    
+                    // Recalcular las unidades de corrección
+                    const correctionNeeded = Math.max(result.currentGlucose - result.targetGlucose, 0);
+                    const newCorrectionUnits = Math.round((correctionNeeded / parseFloat(newFactorCorreccion)) * 10) / 10;
+                    
+                    // Mantener las unidades por carbohidratos
+                    const carbUnits = parseFloat(totalRacionesEditable || 0) * parseFloat(unidadPorRacion || 1);
+                    
+                    // Calcular el nuevo total
+                    const newTotalUnits = parseFloat(carbUnits) + parseFloat(newCorrectionUnits);
+                    
+                    // Actualizar el resultado
+                    setResult(prev => ({
+                      ...prev,
+                      correctionUnits: newCorrectionUnits,
+                      totalUnits: newTotalUnits.toFixed(1)
+                    }));
+                  }}
+                  sx={{ width: '100px' }}
+                />
+                <Typography>mg/dL por unidad</Typography>
+              </Box>
+              
               <Typography fontWeight="bold">
-                Unidades para corrección: {result.correctionUnits}
+                Unidades para corrección (para llegar a 100): {result.correctionUnits}
               </Typography>
             </Box>
 
@@ -1177,12 +1209,29 @@ function App() {
               <Typography>• Por corrección de glucosa (para llegar a 100): {result.correctionUnits} unidades</Typography>
             </Box>
 
+            {useNutritionalInfo && (
+              <Typography 
+                variant="h6" 
+                sx={{ 
+                  color: 'primary.main', 
+                  mt: 2, 
+                  fontSize: '1.1rem' // Tamaño un poco menor que la dosis total
+                }}
+              >
+                Total hidratos de carbono de la comida: {
+                  (
+                    parseFloat(nutritionalInfo.carbGrams || 0) + 
+                    (calculateUGP(
+                      parseFloat(nutritionalInfo.fatGrams || 0),
+                      parseFloat(nutritionalInfo.proteinGrams || 0)
+                    ) * CONVERSION_FACTORS.CARB_TO_RATION)
+                  ).toFixed(1)
+                } g
+              </Typography>
+            )}
+
             <Typography variant="h6" sx={{ color: 'primary.main', mt: 2 }}>
-              Dosis total recomendada: {
-                (parseFloat(result.correctionUnits) + 
-                 parseFloat((parseFloat(totalRacionesEditable) * parseFloat(unidadPorRacion)).toFixed(1))
-                ).toFixed(1)
-              } unidades de insulina
+              Dosis total recomendada: {result.totalUnits} unidades de insulina
             </Typography>
 
             <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}>
