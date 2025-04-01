@@ -802,13 +802,21 @@ function App() {
             mb: 2,
             backgroundColor: '#f5f5f5',
             padding: '1rem',
-            borderRadius: '4px'
+            borderRadius: '4px',
+            flexWrap: 'wrap',
+            justifyContent: 'center'
           }}>
             <Typography variant="subtitle1" color="primary">
               Modo de cálculo:
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography>Por información en gramos de comida</Typography>
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 1,
+              flexWrap: 'wrap',
+              justifyContent: 'center'
+            }}>
+              <Typography sx={{ fontSize: '0.9rem' }}>Por información en gramos de comida</Typography>
               <Switch
                 checked={!useNutritionalInfo}
                 onChange={(e) => setUseNutritionalInfo(!e.target.checked)}
@@ -819,7 +827,7 @@ function App() {
                   }
                 }}
               />
-              <Typography>Por información en raciones de comida</Typography>
+              <Typography sx={{ fontSize: '0.9rem' }}>Por información en raciones de comida</Typography>
             </Box>
           </Box>
 
@@ -879,7 +887,7 @@ function App() {
                 backgroundColor: '#fafafa'
               }}>
                 <Typography variant="subtitle2" color="textSecondary">
-                  Introduce los valores nutricionales por 100g de alimento:
+                  Introduce los valores nutricionales por cada 100g de alimento que vayas a ingerir (normalmente la información nutricional viene detallada por cada 100g de alimento, teniendo esto en cuenta debemos hacer el calculo del total de comida que vayamos a ingerir):
                 </Typography>
                 
                 <TextField
