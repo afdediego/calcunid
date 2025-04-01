@@ -31,6 +31,7 @@ function App() {
     fatGrams: '',
     proteinGrams: ''
   });
+  const [factorCorreccion, setFactorCorreccion] = useState('40'); // Por defecto 40
 
   // Base de datos mejorada y ampliada
   const foodDatabase = {
@@ -706,7 +707,7 @@ function App() {
     const targetGlucose = 100;
     
     const correctionNeeded = Math.max(currentGlucose - targetGlucose, 0);
-    const correctionUnits = Math.round((correctionNeeded / 40) * 10) / 10;
+    const correctionUnits = Math.round((correctionNeeded / parseFloat(factorCorreccion || 40)) * 10) / 10;
     
     let totalRaciones;
     if (useNutritionalInfo) {
@@ -1134,6 +1135,26 @@ function App() {
                   sx={{ width: '100px' }}
                 />
               </Box>
+
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <Typography>• Factor de corrección (mg/dL):</Typography>
+                <TextField
+                  size="small"
+                  type="number"
+                  value={factorCorreccion}
+                  onChange={(e) => {
+                    setFactorCorreccion(e.target.value);
+                    const newCorrectionUnits = Math.round((result.glucoseReduction / parseFloat(e.target.value || 40)) * 10) / 10;
+                    setResult(prev => ({
+                      ...prev,
+                      correctionUnits: newCorrectionUnits,
+                      totalUnits: Math.round((prev.carbUnits + newCorrectionUnits) * 10) / 10
+                    }));
+                  }}
+                  sx={{ width: '100px' }}
+                />
+              </Box>
+
               <Typography>
                 • Por hidratos de carbono: {
                   (parseFloat(totalRacionesEditable) * parseFloat(unidadPorRacion)).toFixed(1)
